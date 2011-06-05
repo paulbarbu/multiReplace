@@ -1,7 +1,7 @@
 subEDIT
 =======
 
-![Work in progress](./work-in-prograss.png "Work in progress")
+![Work in progress](work-in-prograss.png "Work in progress")
 
 This is an extensible, cross-platform, command line tool written in C++ for fast
 find & replace ugly character sets with normal ones(often happening when subtitles
@@ -17,3 +17,6 @@ Configs
 
 Basic usage
 ===========
+
+Installation
+============
