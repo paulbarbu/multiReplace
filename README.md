@@ -24,7 +24,7 @@ Installation
 License
 =======
 
-Copyright 2011 PauLLiK
+(C) Copyright 2011 PauLLiK
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
