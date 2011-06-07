@@ -1,0 +1,8 @@
+*.i
+*.c
+*.s
+*.o
+*.exe
+*.swp
+*~
+/src/subEDIT
