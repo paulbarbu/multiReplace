@@ -1,8 +1,9 @@
 /**
  * Main file for subEDIT
  *
- * (C) 2011 PauLLiK
+ * (C) Copyright 2011 PauLLiK
  */
+
 #include <stdio.h>
 #include <string>
 

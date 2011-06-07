@@ -1,5 +1,7 @@
 /**
- * Functions related to subEDIT
+ * Function implementations for subEDIT
  *
- * (C) 2011 PauLLiK
+ * (C) Copyright 2011 PauLLiK
  */
+
+//add here

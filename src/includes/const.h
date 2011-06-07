@@ -1,6 +1,9 @@
 /**
  * Defined constants for subEDIT
+ *
+ * (C) Copyright 2011 PauLLiK
  */
+
 #pragma once
 #ifndef H_CONST_GUARD
 const int OK = 0;
