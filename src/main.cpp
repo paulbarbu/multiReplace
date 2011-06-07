@@ -17,6 +17,11 @@ int main(int argc, char *argv[]){
     int argNum = 1;
     string path = "", lang = "", config = ""; //TODO: set defaults
 
+    /**
+     * Process arguments here
+     * if they are set the defaults change
+     * if they are set wrong the defaults persist
+     */
     while((argNum < argc) && (argv[argNum][0] == '-')){
         string argument = argv[argNum];
 
