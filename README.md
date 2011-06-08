@@ -12,16 +12,24 @@ The character sets and their replacement are stored in \*.ini files as pairs.
 Defaults
 ========
 
+Default path:
+
+Default configuration file:
+
+Default language:
+
 Configs
 =======
 
 Basic usage
 ===========
 
+./subEDIT -p path/to/subtitles -c path/to/config/default.ini -l RO
+
 Compilation
 ============
 
-Makefile soon
+Just use 'make' in subEDIT's root directory
 
 License
 =======
