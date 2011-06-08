@@ -1,6 +1,7 @@
-* -c --config config file to parse(/*.ini format)
-* -p --path path to subtitle directory(handle it recursively) or subtitle file
-* -l --lang language to look for in the ini section
+* -c -C --config config file to parse(/*.ini format)
+* -p -P --path path to subtitle directory(handle it recursively) or subtitle file
+* -l -L --lang language to look for in the ini section
+* -s -S --silent display no information at the end of processing
 * parse .ini files(probably with tokens)
     * ignore commented lines
     * use STL vectors(two vectors one for ugly chars and one for replacements)
