@@ -1,16 +1,16 @@
+CC=gcc
+CFLAGS=-std=c99 -pedantic -Wall -Wshadow -Wpointer-arith -Wcast-qual -Wstrict-prototypes -Wmissing-prototypes
+OBJS=main.o functions.o
+
 all: subEDIT
 
-subEDIT: main.o functions.o
-	g++ -Wall *.o -o subEDIT
+subEDIT: $(OBJS)
+	$(CC) -o subEDIT $(OBJS) $(CFLAGS)
 
-main.o: src/main.cpp
-	g++ -Wall -c src/main.cpp
-
-functions.o: src/functions.cpp
-	g++ -Wall -c src/functions.cpp
+%.o: src/%.c
+	$(CC) -c $*.c $(CFLAGS)
 
 .PHONY: clean
-
 clean:
 	rm -rf *.{swp,o,i,s}
 	find . -type f -name "*~" -exec rm '{}' \;
