@@ -18,8 +18,10 @@ Configs
 Basic usage
 ===========
 
-Installation
+Compilation
 ============
+
+Makefile soon
 
 License
 =======
