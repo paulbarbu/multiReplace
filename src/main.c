@@ -15,9 +15,9 @@
 int main(int argc, char *argv[]){
 
     int argNum = 1;
-    char *path = DEF_PATH,
-         *config = DEF_CONFIG,
-         *lang = "";
+    char path[] = DEF_PATH,
+         config[] = DEF_CONFIG,
+         lang[] = "";
     FILE *config_file = NULL;
 
     /**
