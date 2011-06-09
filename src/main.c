@@ -115,7 +115,7 @@ int main(int argc, char *argv[]){
     /**
      * Check if the path is a directory, a file or none
      */
-    DIR *path_dir = NULL;
+    DIR *path_dir;
     path_dir = opendir(path);
 
     if(NULL != path_dir){
@@ -128,7 +128,7 @@ int main(int argc, char *argv[]){
         closedir(path_dir);
         free(path_dir);
 
-        FILE *path_file = NULL;
+        FILE *path_file;
         path_file = fopen(path, "r+");
 
         if(NULL != path_file){
