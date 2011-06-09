@@ -14,7 +14,9 @@
 int main(int argc, char *argv[]){
 
     int argNum = 1;
-    char path[] = ".", lang[3] = "RO", config[] = "./config";
+    char *path = DEF_PATH,
+         *config = DEF_CONFIG,
+         *lang = "";
 
     /**
      * Process arguments here
@@ -87,7 +89,7 @@ int main(int argc, char *argv[]){
             exit(ERR_ARG);
         }
         argNum++;
-    }
+    } //finished processing arguments
 
     printf("%s\n%s\n%s\n", path, lang, config);
 
