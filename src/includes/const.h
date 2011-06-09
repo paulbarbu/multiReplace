@@ -9,7 +9,8 @@
 const int OK = 0;
 const int ERR_PATH = 1; //invalid supplied path
 const int ERR_ARG = 2; //invalid argument
+const int ERR_CFG_FILE = 3; //invalid config path
 
-#define char *DEF_PATH = ".";
-#define char *DEF_CONFIG = "./config/default.ini";
+#define DEF_PATH "."
+#define DEF_CONFIG "./config/default.ini"
 #endif
