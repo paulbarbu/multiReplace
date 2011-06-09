@@ -16,11 +16,14 @@ int main(int argc, char *argv[]){
 
     int argNum = 1;
 
-    char path[] = DEF_PATH,
-         config[] = DEF_CONFIG,
-         lang[] = "";
+    char *path = malloc((strlen(DEF_PATH)+1) * sizeof(char)),
+         *config = malloc((strlen(DEF_CONFIG)+1) * sizeof(char)),
+         *lang = malloc(2 * sizeof(char));
 
     FILE *config_file = NULL;
+
+    strcpy(path, DEF_PATH);
+    strcpy(config, DEF_CONFIG);
 
     /**
      * Process arguments here
@@ -44,6 +47,7 @@ int main(int argc, char *argv[]){
                 exit(ERR_ARG);
             }
             else{
+                path = realloc(path, strlen(argv[argNum]) * sizeof(char));
                 strcpy(path, argv[argNum]);
             }
         }
@@ -62,6 +66,8 @@ int main(int argc, char *argv[]){
                 exit(ERR_ARG);
             }
             else{
+                free(config);
+                config = malloc(strlen(argv[argNum]) * sizeof(char));
                 strcpy(config, argv[argNum]);
             }
         }
