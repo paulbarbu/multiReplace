@@ -12,6 +12,6 @@ subEDIT: $(OBJS)
 
 .PHONY: clean
 clean:
-	rm -rf *.{swp,o,i,s}
+	rm -rf *.{swp,o,i,s,out}
 	find . -type f -name "*~" -exec rm '{}' \;
 	rm -rf subEDIT
