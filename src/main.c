@@ -15,9 +15,11 @@
 int main(int argc, char *argv[]){
 
     int argNum = 1;
+
     char path[] = DEF_PATH,
          config[] = DEF_CONFIG,
          lang[] = "";
+
     FILE *config_file = NULL;
 
     /**
@@ -25,7 +27,7 @@ int main(int argc, char *argv[]){
      * if they are set the defaults change
      * if they are set wrong the defaults persist
      */
-    while((argNum < argc) && (argv[argNum][0] == '-')){
+    while((argNum < argc) && ('-' == argv[argNum][0])){
 
         /**
          * Path to subtitle(s)
@@ -78,7 +80,7 @@ int main(int argc, char *argv[]){
                 exit(ERR_ARG);
             }
 
-            if(argv[argNum][0] == '-'){
+            if('-' == argv[argNum][0]){
                 printf("Language not specified!\n");
                 exit(ERR_ARG);
             }
@@ -93,16 +95,52 @@ int main(int argc, char *argv[]){
         argNum++;
     } //finished processing arguments
 
-    printf("%s\n%s\n%s\n", path, lang, config);
+    printf("%s\n%s\n%s\n", path, lang, config); //delete this when publishing
 
+    /**
+     * Check if the config file is a valid file
+     */
     config_file = fopen(config, "r");
 
-    if(config_file != NULL){
+    if(NULL != config_file){
         //call function to parse the config file
     }
     else{
         printf("Invalid configuration file!\n");
         exit(ERR_CFG_FILE);
+    }
+
+    fclose(config_file);
+
+    /**
+     * Check if the path is a directory, a file or none
+     */
+    DIR *path_dir = NULL;
+    path_dir = opendir(path);
+
+    if(NULL != path_dir){
+        //path is a directory so handle it recursively
+        printf("\n--DIR--\n");
+    }
+    else{
+        //path was not a directory, checking for file
+
+        closedir(path_dir);
+        free(path_dir);
+
+        FILE *path_file = NULL;
+        path_file = fopen(path, "r+");
+
+        if(NULL != path_file){
+            //handle path as a single file
+
+            printf("\n--FILE--\n");
+        }
+        else{
+            printf("Invalid path!\n");
+            exit(ERR_PATH);
+        }
+        fclose(path_file);
     }
 
     return OK;
