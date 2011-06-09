@@ -47,7 +47,7 @@ int main(int argc, char *argv[]){
                 exit(ERR_ARG);
             }
             else{
-                path = realloc(path, strlen(argv[argNum]) * sizeof(char));
+                path = realloc(path, (strlen(argv[argNum])+1) * sizeof(char));
                 strcpy(path, argv[argNum]);
             }
         }
@@ -66,8 +66,7 @@ int main(int argc, char *argv[]){
                 exit(ERR_ARG);
             }
             else{
-                free(config);
-                config = malloc(strlen(argv[argNum]) * sizeof(char));
+                config = realloc(config, (strlen(argv[argNum])+1) * sizeof(char));
                 strcpy(config, argv[argNum]);
             }
         }
