@@ -7,6 +7,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <dirent.h>
 
 //#include "./includes/functions.h"
 #include "./includes/const.h"
@@ -17,6 +18,7 @@ int main(int argc, char *argv[]){
     char *path = DEF_PATH,
          *config = DEF_CONFIG,
          *lang = "";
+    FILE *config_file = NULL;
 
     /**
      * Process arguments here
@@ -92,6 +94,16 @@ int main(int argc, char *argv[]){
     } //finished processing arguments
 
     printf("%s\n%s\n%s\n", path, lang, config);
+
+    config_file = fopen(config, "r");
+
+    if(config_file != NULL){
+        //call function to parse the config file
+    }
+    else{
+        printf("Invalid configuration file!\n");
+        exit(ERR_CFG_FILE);
+    }
 
     return OK;
 }
