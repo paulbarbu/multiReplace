@@ -7,5 +7,6 @@
 #pragma once
 #ifndef H_FUNCTIONS_GUARD
 #define H_FUNCTIONS_GUARD
-//add here
+
+long int lang_search(const char *needle, FILE *haystack);
 #endif

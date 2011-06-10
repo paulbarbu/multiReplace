@@ -13,4 +13,5 @@ const int ERR_CFG_FILE = 3; //invalid config path
 
 #define DEF_PATH "."
 #define DEF_CONFIG "./config/default.ini"
+#define DEF_LANG "??"
 #endif

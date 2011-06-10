@@ -15,15 +15,20 @@
 int main(int argc, char *argv[]){
 
     int argNum = 1;
+    long int position = -1;
 
     char *path = malloc((strlen(DEF_PATH)+1) * sizeof(char)),
          *config = malloc((strlen(DEF_CONFIG)+1) * sizeof(char)),
-         *lang = malloc(2 * sizeof(char));
+         *lang = malloc(3 * sizeof(char));
 
     FILE *config_file = NULL;
 
+    //int path_ok = 0;
+    int config_ok = 0;
+
     strcpy(path, DEF_PATH);
     strcpy(config, DEF_CONFIG);
+    strcpy(lang, DEF_LANG);
 
     /**
      * Process arguments here
@@ -108,14 +113,13 @@ int main(int argc, char *argv[]){
     config_file = fopen(config, "r");
 
     if(NULL != config_file){
-        //call function to parse the config file
+        config_ok = 1;
     }
     else{
         printf("Invalid configuration file!\n");
         exit(ERR_CFG_FILE);
     }
 
-    fclose(config_file);
 
     /**
      * Check if the path is a directory, a file or none
@@ -124,8 +128,8 @@ int main(int argc, char *argv[]){
     path_dir = opendir(path);
 
     if(NULL != path_dir){
+        //path_ok = true;
         //path is a directory so handle it recursively
-        printf("\n--DIR--\n");
     }
     else{
         //path was not a directory, checking for file
@@ -138,15 +142,17 @@ int main(int argc, char *argv[]){
 
         if(NULL != path_file){
             //handle path as a single file
-
-            printf("\n--FILE--\n");
+            //path_OK = true;
         }
         else{
             printf("Invalid path!\n");
             exit(ERR_PATH);
         }
-        fclose(path_file);
     }
 
-    return OK;
+    if(1 == config_ok){
+        position = lang_search(lang, config_file);
+    }
+
+    exit(OK);
 }
