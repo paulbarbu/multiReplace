@@ -152,6 +152,12 @@ int main(int argc, char *argv[]){
 
     if(1 == config_ok){
         position = lang_search(lang, config_file);
+
+        if(-1 == position){
+            rewind(config_file);
+        }
+
+       get_char_sets(config_file);
     }
 
     exit(OK);

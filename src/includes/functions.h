@@ -9,4 +9,5 @@
 #define H_FUNCTIONS_GUARD
 
 long int lang_search(const char *needle, FILE *haystack);
+char** get_char_sets(FILE *source);
 #endif
