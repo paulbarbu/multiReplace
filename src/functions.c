@@ -5,6 +5,7 @@
  */
 #include <stdlib.h>
 #include <stdio.h>
+#include <ctype.h>
 #include <string.h>
 
 /**
@@ -24,9 +25,14 @@ long int lang_search(const char *needle, FILE *haystack){
 
     while(!feof(haystack)){
         fgets(line, 5 , haystack);
-        if('[' == line[0] && NULL != strstr(line, needle)
-                && ']' == line[strlen(line)-1]){
-            break;
+        if('[' == line[0] && ']' == line[strlen(line)-1]){
+
+            line[1] = toupper(line[1]);
+            line[2] = toupper(line[2]);
+
+            if(NULL != strstr(line, needle)){
+                break;
+            }
         }
     }
 
@@ -58,10 +64,10 @@ char** get_char_sets(FILE *source){
         sets[i] = malloc(n * sizeof(char));
     }
 
-    fgets(line, 5, source);
-    while(!feof(source)){
-
+    do{
+        fgets(line, 5, source);
         if('[' != line[0]){
+
             if(';' != line[0] && '\n' != line[0] && '\0' != line[0]
                     && '=' == line[1]){ //line not commented and valid
 
@@ -74,12 +80,12 @@ char** get_char_sets(FILE *source){
 
                 n++;
             }
-            fgets(line, 5, source);
         }
         else{
             break;
         }
-    }
+
+    }while(!feof(source));
 
     sets[0][n-1] = '\0';
     sets[1][n-1] = '\0';
