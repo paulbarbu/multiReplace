@@ -19,7 +19,8 @@ int main(int argc, char *argv[]){
 
     char *path = malloc((strlen(DEF_PATH)+1) * sizeof(char)),
          *config = malloc((strlen(DEF_CONFIG)+1) * sizeof(char)),
-         *lang = malloc(3 * sizeof(char));
+         *lang = malloc(3 * sizeof(char)),
+         **sets;
 
     FILE *config_file = NULL;
 
@@ -155,9 +156,21 @@ int main(int argc, char *argv[]){
 
         if(-1 == position){
             rewind(config_file);
+
+            char *comment = malloc(82 * sizeof(char));
+            do{
+                fgets(comment, 82, config_file);
+               // printf("\n%s\n",comment);
+            }while(';' == comment[0] || '\n' == comment[0] || '\0' == comment[0]);
         }
 
-       get_char_sets(config_file);
+        sets = get_char_sets(config_file);
+
+        int i=0;
+        while('\0' != sets[0][i]){
+                printf("\n%c - %c\n", sets[0][i], sets[1][i]);
+            i++;
+        }
     }
 
     exit(OK);
