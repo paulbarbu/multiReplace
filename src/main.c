@@ -10,7 +10,7 @@
 #include <ctype.h>
 #include <dirent.h>
 
-//#include "./includes/functions.h"
+#include "./includes/functions.h"
 #include "./includes/const.h"
 
 int main(int argc, char *argv[]){
@@ -164,16 +164,15 @@ int main(int argc, char *argv[]){
             char *comment = malloc(82 * sizeof(char));
             do{
                 fgets(comment, 82, config_file);
-               // printf("\n%s\n",comment);
             }while(';' == comment[0] || '\n' == comment[0] || '\0' == comment[0]);
         }
 
         sets = get_char_sets(config_file);
 
-        int i=0;
-        while('\0' != sets[0][i]){
-                printf("\n%c - %c\n", sets[0][i], sets[1][i]);
-            i++;
+        int i=2;
+        while(NULL != sets[i-1]){
+                printf("\n%s - %s\n", sets[i-2], sets[i-1]);
+            i+=2;
         }
     }
 
