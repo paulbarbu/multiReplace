@@ -20,7 +20,7 @@ int main(int argc, char *argv[]){
 
     char *path = malloc((strlen(DEF_PATH)+1) * sizeof(char)),
          *config = malloc((strlen(DEF_CONFIG)+1) * sizeof(char)),
-         *lang = malloc(3 * sizeof(char)),
+         *lang = malloc((strlen(DEF_LANG)+1) * sizeof(char)),
          **sets;
 
     FILE *config_file = NULL,
@@ -85,16 +85,12 @@ int main(int argc, char *argv[]){
                 exit(ERR_ARG);
             }
 
-            if(2 != strlen(argv[argNum])){
-                printf("Language string must be two characters long!\n");
-                exit(ERR_ARG);
-            }
-
             if('-' == argv[argNum][0]){
                 printf("Language not specified!\n");
                 exit(ERR_ARG);
             }
             else{
+                lang = realloc(lang, (strlen(argv[argNum])+1) * sizeof(char));
                 strcpy(lang, argv[argNum]);
                 for(int i=0;i<strlen(lang);i++){
                     lang[i] = toupper(lang[i]);
@@ -146,8 +142,6 @@ int main(int argc, char *argv[]){
         file_stats = parse_dir(sets, path_dir, path);
     }
     else{
-        //path was not a directory, checking for file
-
         closedir(path_dir);
         free(path_dir);
 
