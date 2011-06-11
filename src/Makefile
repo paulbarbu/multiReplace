@@ -7,6 +7,9 @@ all: subEDIT
 subEDIT: $(OBJS)
 	$(CC) -o subEDIT $(OBJS) $(CFLAGS)
 
+debug: $(OBJS)
+	$(CC) -g $(OBJS:.o=.c) $(CFLAGS)
+
 %.o: src/%.c
 	$(CC) -c $*.c $(CFLAGS)
 
