@@ -5,5 +5,4 @@
 *.exe
 *.swp
 *~
-/src/subEDIT
-/src/colormake
+/src/mr
