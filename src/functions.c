@@ -138,18 +138,24 @@ long int replace_in_file(char **sets, FILE *file){
         fgets(line, 256, file);
 
         int i=0;
-        do{
-            do{
+        do{ //search through all char sets
+            do{ //search for a character until found becomes NULL
                 found = strstr(line, sets[i]);
                 if(NULL != found){
+
+                    //replace
                     strncpy(found, sets[i+1], strlen(sets[i+1]));
+
+                    //go back the size of line bytes and put the string back
+                    //into the file
                     fseek(file, -1 *(strlen(line)*sizeof(char)) , SEEK_CUR);
                     fputs(line, file);
+
                     n++;
                 }
             }while(NULL != found);
 
-            i+=2;
+            i+=2; //next char set
         }while(NULL != sets[i]);
 
     }
