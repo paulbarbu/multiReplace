@@ -1,7 +1,6 @@
 * -C
-* -P - dir->recursively/single file
+* -P
 * -L
 * -s -S --silent display no information at the end of processing
-* actually replace chars
+* string replace not just single chars
 * display info at the end of processing
-* check for empty files
