@@ -1,12 +1,12 @@
-subEDIT
+multiReplace
 =======
 
-![Work in progress](https://github.com/paullik/subEDIT/raw/master/wip.png 
+![Work in progress](https://github.com/paullik/multiReplace/raw/master/wip.png 
 "Work in progress")
 
 This is an extensible, cross-platform, command line tool written in C for fast
 find & replace ugly characters with normal ones(often happening when subtitles
-contain language-specific letters).
+contain language-specific letters) in multiple files at a time.
 
 The character sets and their replacement are stored in \*.ini files as pairs.
 
@@ -27,12 +27,19 @@ Just a test config for now...
 Basic usage
 ===========
 
-./subEDIT -p path/to/subtitles -c path/to/config/default.ini -l RO
+./mr -p path/to/subtitles -c path/to/config/default.ini -l RO
 
 Compilation
 ============
 
-Just use 'make' in subEDIT's root directory
+Just use 'make' in multiReplace's root directory
+
+History
+=======
+
+Original name: subEDIT
+Its original purpose was to replace characters in subtitles, now its purpose is
+generally to replace characters in files
 
 License
 =======
