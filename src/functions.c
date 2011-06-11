@@ -17,7 +17,7 @@
  */
 long int lang_search(const char *needle, FILE *haystack){
     long int file_size, pos;
-    char *line = malloc(5 * sizeof(char));
+    char *line = malloc(256 * sizeof(char));
 
     fseek(haystack, 0, SEEK_END);
     file_size = ftell(haystack);
@@ -25,11 +25,12 @@ long int lang_search(const char *needle, FILE *haystack){
     rewind(haystack); //set pointer in file at beginning
 
     while(!feof(haystack)){
-        fgets(line, 5 , haystack);
-        if('[' == line[0] && ']' == line[strlen(line)-1]){
+        fgets(line, 256 , haystack);
+        if('[' == line[0] && ']' == line[strlen(line)-2]){
 
-            line[1] = toupper(line[1]);
-            line[2] = toupper(line[2]);
+            for(int i=1;i<strlen(line)-2;i++){
+                line[i] = toupper(line[i]);
+            }
 
             if(NULL != strstr(line, needle)){
                 break;
@@ -68,44 +69,52 @@ long int lang_search(const char *needle, FILE *haystack){
  * Returns an array of pointers to strings(multi-dimensional array of strings)
  */
 char** get_char_sets(FILE *source){
-    int n=2, k;
-    char *line = malloc(6 * sizeof(char)),
-         **sets = malloc(n * sizeof(char*));
+    int n = 2,
+        k = 0,
+        equal_pos = 0;
+
+    char *line = malloc(256 * sizeof(char)),
+        **sets = malloc(n * sizeof(char*)),
+        *equal = malloc(sizeof(char));
 
     for(int i=0;i<n;i++){
         sets[i] = malloc(1 * sizeof(char));
     }
 
     do{
-        fgets(line, 6, source);
-        if('[' != line[0]){
+        fgets(line, 256, source);
+        if('[' != line[0] && !feof(source)){
 
             //line not commented and valid
             if(';' != line[0] && '\n' != line[0] && '\0' != line[0]){
-                if('=' == line[1]){
-                    k=1;
-                }
-                else if('=' == line[2]){
-                    k=2;
+                if(NULL != (equal = strstr(line, "="))){
+                    equal_pos = equal - line;
+                    printf("\n!!%d!!\n", equal_pos);
                 }
                 else{
                     continue;
                 }
 
                 for(int i=n-2;i<n;i++){
-                    sets[i] = realloc(sets[i], k * sizeof(char));
+                    if(0 == i%2){
+                        sets[i] = realloc(sets[i], equal_pos * sizeof(char));
+                    }
+                    else{
+                        sets[i] = realloc(sets[i], (strlen(line) - equal_pos)
+                                                    * sizeof(char));
+                    }
                 }
 
-                if(1 == k){
-                    sets[n-2][0] = line[0];
-                    sets[n-1][0] = line[2];
+                for(int i=0;i<equal_pos;i++){
+                    sets[n-2][i] = line[i];
                 }
-                else{
-                    sets[n-2][0] = line[0];
-                    sets[n-2][1] = line[1];
+                sets[n-2][equal_pos] = '\0';
 
-                    sets[n-1][0] = line[3];
+                k=0;
+                for(int i=equal_pos + 1;i<strlen(line)-1;i++){
+                    sets[n-1][k++] = line[i];
                 }
+                sets[n-1][strlen(line) - equal_pos - 2] = '\0';
 
                 n+=2;
                 sets = realloc(sets, n * sizeof(char*));
@@ -116,6 +125,12 @@ char** get_char_sets(FILE *source){
         }
 
     }while(!feof(source));
+
+    /*int i=2;*/
+    /*while(NULL != sets[i-1]){*/
+        /*printf("\n:: %s(%d) = %s(%d) ::\n", sets[i-2], strlen(sets[i-2]), sets[i-1], strlen(sets[i-1]));*/
+        /*i+=2;*/
+    /*}*/
 
     return sets;
 }
@@ -149,7 +164,7 @@ long int replace_in_file(const char **sets, FILE *file){
 
                     //go back the size of line bytes and put the string back
                     //into the file
-                    fseek(file, -1 *(strlen(line)*sizeof(char)) , SEEK_CUR);
+                    fseek(file, -1 * (strlen(line) * sizeof(char)) , SEEK_CUR);
                     fputs(line, file);
 
                     n++;
@@ -231,12 +246,12 @@ long int* parse_dir(const char** sets, DIR *dir, char *path){
 
                 closedir(sub_dir);
 
-                printf("\n--%s--\n", entry->d_name);
+                /*printf("\n--%s--\n", entry->d_name);*/
             }
             else{
                 FILE *file;
 
-                printf("\n<-%s->\n", name);
+                /*printf("\n<-%s->\n", name);*/
 
                 file = fopen(name, "r+");
                 if(NULL != file){
