@@ -1,5 +1,5 @@
 /**
- * Main file for subEDIT
+ * Main file for mR
  *
  * (C) Copyright 2011 PauLLiK
  */
@@ -16,7 +16,7 @@
 int main(int argc, char *argv[]){
 
     int argNum = 1;
-    long int position = -1, replacements;
+    long int position = -1, replacements, *file_stats;
 
     char *path = malloc((strlen(DEF_PATH)+1) * sizeof(char)),
          *config = malloc((strlen(DEF_CONFIG)+1) * sizeof(char)),
@@ -143,8 +143,7 @@ int main(int argc, char *argv[]){
     path_dir = opendir(path);
 
     if(NULL != path_dir){
-        //int** nr_files_changes;
-        //nr_file_changes = parse_dir(path_dir);
+        file_stats = parse_dir(sets, path_dir, path);
     }
     else{
         //path was not a directory, checking for file
@@ -163,7 +162,7 @@ int main(int argc, char *argv[]){
         }
     }
 
-    printf("\n---%d---\n", replacements);
+    printf("\n---%ld,%ld---\n", file_stats[0], file_stats[1]);
 
     exit(OK);
 }

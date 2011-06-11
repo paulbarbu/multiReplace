@@ -1,5 +1,5 @@
 /**
- * Function implementations for subEDIT
+ * Function implementations for mR
  *
  * (C) Copyright 2011 PauLLiK
  */
@@ -7,6 +7,7 @@
 #include <stdio.h>
 #include <ctype.h>
 #include <string.h>
+#include <dirent.h>
 
 /**
  * long int lang_search(const char *needle, FILE *haystack)
@@ -183,4 +184,71 @@ int empty_file(FILE *file){
     }
 
     return 0;
+}
+
+/**
+ * long int** parse_dir(const char** sets, DIR *dir)
+ *
+ * Tries to open every file in the *dir directory and its subdirectories to edit
+ * it
+ *
+ * Returns a bidimensional array of long ints, first if the number of files
+ * edited and the second one is number of replacements made
+ */
+long int* parse_dir(const char** sets, DIR *dir, char *path){
+    long int *info = malloc(2 * sizeof(long int));
+
+    char *name = malloc(strlen(path) * sizeof(char) +1),
+         *def_name = malloc(strlen(path) * sizeof(char) +1);
+
+    struct dirent *entry;
+
+    info[0] = 0;
+    info[1] = 0;
+
+    strcpy(def_name, path);
+    strcat(def_name, "/");
+
+    while(NULL != (entry = readdir(dir))){
+        if(0 != strcmp(entry->d_name, ".") && 0 != strcmp(entry->d_name, "..")){
+
+            name = realloc(name,
+                strlen(def_name) * sizeof(char) + strlen(entry->d_name));
+            strcpy(name, def_name);
+
+            strcat(name, entry->d_name);
+
+            if(opendir(name)){
+                DIR *sub_dir;
+                long int *info_sub = malloc(2 * sizeof(long int));
+
+                sub_dir = opendir(name);
+
+                info_sub = parse_dir(sets, sub_dir, name);
+
+                info[0] += info_sub[0];
+                info[1] += info_sub[1];
+
+                printf("\n--%s--\n", entry->d_name);
+
+
+                //call recursively
+            }
+            else{
+                FILE *file;
+
+                printf("\n<-%s->\n", name);
+
+                file = fopen(name, "r+");
+                if(NULL != file){
+
+                    info[1] += replace_in_file(sets, file);
+                    info[0]++;
+                    fclose(file);
+                }
+            }
+        }
+    }
+
+    return info;
 }
