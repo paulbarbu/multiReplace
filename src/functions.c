@@ -229,10 +229,9 @@ long int* parse_dir(const char** sets, DIR *dir, char *path){
                 info[0] += info_sub[0];
                 info[1] += info_sub[1];
 
+                closedir(sub_dir);
+
                 printf("\n--%s--\n", entry->d_name);
-
-
-                //call recursively
             }
             else{
                 FILE *file;
@@ -244,6 +243,7 @@ long int* parse_dir(const char** sets, DIR *dir, char *path){
 
                     info[1] += replace_in_file(sets, file);
                     info[0]++;
+
                     fclose(file);
                 }
             }
