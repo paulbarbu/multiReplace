@@ -16,17 +16,18 @@
 int main(int argc, char *argv[]){
 
     int argNum = 1;
-    long int position = -1;
+    long int position = -1, replacements;
 
     char *path = malloc((strlen(DEF_PATH)+1) * sizeof(char)),
          *config = malloc((strlen(DEF_CONFIG)+1) * sizeof(char)),
          *lang = malloc(3 * sizeof(char)),
          **sets;
 
-    FILE *config_file = NULL;
+    FILE *config_file = NULL,
+        *path_file;
 
-    //int path_ok = 0;
-    int config_ok = 0;
+    int path_ok = 0,
+        config_ok = 0;
 
     strcpy(path, DEF_PATH);
     strcpy(config, DEF_CONFIG);
@@ -142,12 +143,11 @@ int main(int argc, char *argv[]){
         closedir(path_dir);
         free(path_dir);
 
-        FILE *path_file;
         path_file = fopen(path, "r+");
 
         if(NULL != path_file){
             //handle path as a single file
-            //path_OK = true;
+            path_ok = 1;
         }
         else{
             printf("Invalid path!\n");
@@ -169,12 +169,18 @@ int main(int argc, char *argv[]){
 
         sets = get_char_sets(config_file);
 
-        int i=2;
-        while(NULL != sets[i-1]){
-                printf("\n%s - %s\n", sets[i-2], sets[i-1]);
-            i+=2;
-        }
+        /*int i=2;*/
+        /*while(NULL != sets[i-1]){*/
+                /*printf("\n%s - %s\n", sets[i-2], sets[i-1]);*/
+            /*i+=2;*/
+        /*}*/
     }
+
+    if(1 == path_ok){
+        replacements = replace_in_file(sets, path_file);
+    }
+
+    printf("\n---%d---\n", replacements);
 
     exit(OK);
 }

@@ -118,3 +118,41 @@ char** get_char_sets(FILE *source){
 
     return sets;
 }
+
+/**
+ * long int replace_file(char **sets, FILE *file){
+ *
+ * Search for sets[even_number] in file stream *file and replace with
+ * sets[uneven_number]
+ *
+ * Returns a long int representing number of replacements made
+ */
+long int replace_in_file(char **sets, FILE *file){
+    long int n = 0;
+
+    char *line = malloc(256 * sizeof(char)),
+         *found = malloc(256 * sizeof(char));
+
+    rewind(file);
+    while(!feof(file)){
+        fgets(line, 256, file);
+
+        int i=0;
+        do{
+            do{
+                found = strstr(line, sets[i]);
+                if(NULL != found){
+                    strncpy(found, sets[i+1], strlen(sets[i+1]));
+                    fseek(file, -1 *(strlen(line)*sizeof(char)) , SEEK_CUR);
+                    fputs(line, file);
+                    n++;
+                }
+            }while(NULL != found);
+
+            i+=2;
+        }while(NULL != sets[i]);
+
+    }
+
+    return n;
+}
