@@ -127,7 +127,7 @@ char** get_char_sets(FILE *source){
  *
  * Returns a long int representing number of replacements made
  */
-long int replace_in_file(char **sets, FILE *file){
+long int replace_in_file(const char **sets, FILE *file){
     long int n = 0;
 
     char *line = malloc(256 * sizeof(char)),
@@ -161,4 +161,26 @@ long int replace_in_file(char **sets, FILE *file){
     }
 
     return n;
+}
+
+/**
+ * int empty_file(FILE *file)
+ *
+ * Returns 1 if the file is empty, else 0
+ */
+int empty_file(FILE *file){
+    long int current_pos, size;
+
+    current_pos = ftell(file);
+
+    fseek(file, 0, SEEK_END);
+    size = ftell(file);
+
+    fseek(file, current_pos, SEEK_SET);
+
+    if(0 == size){
+        return 1;
+    }
+
+    return 0;
 }

@@ -26,9 +26,6 @@ int main(int argc, char *argv[]){
     FILE *config_file = NULL,
         *path_file;
 
-    int path_ok = 0,
-        config_ok = 0;
-
     strcpy(path, DEF_PATH);
     strcpy(config, DEF_CONFIG);
     strcpy(lang, DEF_LANG);
@@ -118,8 +115,20 @@ int main(int argc, char *argv[]){
      */
     config_file = fopen(config, "r");
 
-    if(NULL != config_file){
-        config_ok = 1;
+    if(NULL != config_file && !empty_file(config_file)){
+        position = lang_search(lang, config_file);
+
+        if(-1 == position){
+            rewind(config_file);
+
+            char *comment = malloc(82 * sizeof(char));
+            do{
+                fgets(comment, 82, config_file);
+            }while(';' == comment[0] || '\n' == comment[0]
+                    || '\0' == comment[0]);
+        }
+
+        sets = get_char_sets(config_file);
     }
     else{
         printf("Invalid configuration file!\n");
@@ -134,8 +143,8 @@ int main(int argc, char *argv[]){
     path_dir = opendir(path);
 
     if(NULL != path_dir){
-        //path_ok = true;
-        //path is a directory so handle it recursively
+        //int** nr_files_changes;
+        //nr_file_changes = parse_dir(path_dir);
     }
     else{
         //path was not a directory, checking for file
@@ -146,38 +155,12 @@ int main(int argc, char *argv[]){
         path_file = fopen(path, "r+");
 
         if(NULL != path_file){
-            //handle path as a single file
-            path_ok = 1;
+            replacements = replace_in_file(sets, path_file);
         }
         else{
             printf("Invalid path!\n");
             exit(ERR_PATH);
         }
-    }
-
-    if(1 == config_ok){
-        position = lang_search(lang, config_file);
-
-        if(-1 == position){
-            rewind(config_file);
-
-            char *comment = malloc(82 * sizeof(char));
-            do{
-                fgets(comment, 82, config_file);
-            }while(';' == comment[0] || '\n' == comment[0] || '\0' == comment[0]);
-        }
-
-        sets = get_char_sets(config_file);
-
-        /*int i=2;*/
-        /*while(NULL != sets[i-1]){*/
-                /*printf("\n%s - %s\n", sets[i-2], sets[i-1]);*/
-            /*i+=2;*/
-        /*}*/
-    }
-
-    if(1 == path_ok){
-        replacements = replace_in_file(sets, path_file);
     }
 
     printf("\n---%d---\n", replacements);
