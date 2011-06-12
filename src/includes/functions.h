@@ -10,7 +10,7 @@
 
 long int lang_search(char *needle, FILE *haystack);
 char** get_char_sets(FILE *source);
-long int replace_in_file(char **sets, FILE *file);
-int empty_file(FILE *file);
+long int replace_in_file(char **sets, FILE *file, char *path, char *mode);
+long int file_size(FILE *file);
 long int parse_dir(char **sets, DIR *dir, char *path);
 #endif

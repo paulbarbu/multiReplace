@@ -111,7 +111,7 @@ int main(int argc, char *argv[]){
      */
     config_file = fopen(config, "r");
 
-    if(NULL != config_file && !empty_file(config_file)){
+    if(NULL != config_file && -1 != file_size(config_file)){
         position = lang_search(lang, config_file);
 
         if(-1 == position){
@@ -148,7 +148,7 @@ int main(int argc, char *argv[]){
         path_file = fopen(path, "r+");
 
         if(NULL != path_file){
-            replacements = replace_in_file(sets, path_file);
+            replacements = replace_in_file(sets, path_file, path, "w");
         }
         else{
             printf("Invalid path!\n");

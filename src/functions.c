@@ -10,17 +10,38 @@
 #include <dirent.h>
 
 /**
+ * long int empty_file(FILE *file)
+ *
+ * Returns -1 if the file is empty, else returns the file size in long int
+ */
+long int file_size(FILE *file){
+    long int current_pos, size;
+
+    current_pos = ftell(file);
+
+    fseek(file, 0, SEEK_END);
+    size = ftell(file);
+
+    fseek(file, current_pos, SEEK_SET);
+
+    if(0 == size){
+        return -1;
+    }
+
+    return size;
+}
+
+/**
  * long int lang_search(const char *needle, FILE *haystack)
  *
  * Search for string needle in file haystack
  * If needle is found return starting position, else return NULL
  */
 long int lang_search(const char *needle, FILE *haystack){
-    long int file_size, pos;
+    long int size, pos;
     char *line = malloc(256 * sizeof(char));
 
-    fseek(haystack, 0, SEEK_END);
-    file_size = ftell(haystack);
+    size = file_size(haystack);
 
     rewind(haystack); //set pointer in file at beginning
 
@@ -40,7 +61,7 @@ long int lang_search(const char *needle, FILE *haystack){
 
     pos = ftell(haystack);
 
-    if(pos == file_size){ //if the file pointer is at the end of the haystack
+    if(pos == size){ //if the file pointer is at the end of the haystack
                         //then the needle was not found
         pos = -1;
     }
@@ -136,36 +157,64 @@ char** get_char_sets(FILE *source){
 }
 
 /**
- * long int replace_file(char **sets, FILE *file){
+ * long int replace_in_file(const char **sets, FILE *file, const char *path,
+ *                          const char *mode){
  *
  * Search for sets[even_number] in file stream *file and replace with
  * sets[uneven_number]
  *
  * Returns a long int representing number of replacements made
  */
-long int replace_in_file(const char **sets, FILE *file){
-    long int n = 0;
+long int replace_in_file(const char **sets, FILE *file, const char *path,
+                            const char *mode){
+    long int n = 0, size = 0;
 
-    char *line = malloc(256 * sizeof(char)),
-         *found = malloc(256 * sizeof(char));
+    char *buffer,
+         *found;
 
-    rewind(file);
-    while(!feof(file)){
-        fgets(line, 256, file);
+    size = file_size(file);
+    printf("::%d::", size);
+    if(-1 != size){
 
+        buffer = malloc(size * sizeof(char));
+        found = malloc(size * sizeof(char));
+
+        rewind(file);
+        fread(buffer, 1, size, file);
+printf("\n\n%c\n\n", buffer);
         int i=0;
         do{ //search through all char sets
             do{ //search for a character until found becomes NULL
-                found = strstr(line, sets[i]);
+                found = strstr(buffer, sets[i]);
                 if(NULL != found){
 
                     //replace
-                    strncpy(found, sets[i+1], strlen(sets[i+1]));
+                    if(strlen(sets[i]) == strlen(sets[i+1])){
+                        strncpy(found, sets[i+1], strlen(sets[i+1]));
+                    }
+                    else{ //we have to modify the buffer's size
+                        int len = found - buffer,
+                            remaining_len = len + strlen(sets[i]);
+
+                        char *before = malloc(len * sizeof(char)),
+                             *occ = malloc(strlen(sets[i+1]) * sizeof(char)),
+                             *after = malloc(size - len - strlen(sets[i])),
+                             *a = buffer[remaining_len];
+
+                        strncpy(before, buffer, len); //part before occurrence
+                        strcpy(after, buffer + remaining_len); //part after occurrence
+
+                        size += (strlen(sets[i+1]) - strlen(sets[i]));
+                        free(buffer); //empty buffer
+                        buffer = malloc(size * sizeof(char));
+                        buffer[0] = '\0';
+                        strcat(buffer, before);
+                        strcat(buffer, sets[i+1]);
+                        strcat(buffer, after);
+                    }
 
                     //go back the size of line bytes and put the string back
                     //into the file
-                    fseek(file, -1 * (strlen(line) * sizeof(char)) , SEEK_CUR);
-                    fputs(line, file);
 
                     n++;
                 }
@@ -174,31 +223,13 @@ long int replace_in_file(const char **sets, FILE *file){
             i+=2; //next char set
         }while(NULL != sets[i]);
 
-    }
+        freopen(path, "w" ,file);
+        fwrite(buffer, 1, size, file);
 
+        free(buffer);
+        free(found);
+    }
     return n;
-}
-
-/**
- * int empty_file(FILE *file)
- *
- * Returns 1 if the file is empty, else 0
- */
-int empty_file(FILE *file){
-    long int current_pos, size;
-
-    current_pos = ftell(file);
-
-    fseek(file, 0, SEEK_END);
-    size = ftell(file);
-
-    fseek(file, current_pos, SEEK_SET);
-
-    if(0 == size){
-        return 1;
-    }
-
-    return 0;
 }
 
 /**
@@ -256,7 +287,7 @@ long int* parse_dir(const char** sets, DIR *dir, char *path){
                 file = fopen(name, "r+");
                 if(NULL != file){
 
-                    info[1] += replace_in_file(sets, file);
+                    info[1] += replace_in_file(sets, file, name, "w");
                     info[0]++;
 
                     fclose(file);
