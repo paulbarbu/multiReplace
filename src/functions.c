@@ -95,10 +95,10 @@ char** get_char_sets(FILE *source){
         equal_pos = 0;
 
     char *line = malloc(256 * sizeof(char)),
-        **sets = malloc(n * sizeof(char*)),
+        **sets = malloc((n + 1) * sizeof(char*)),
         *equal = malloc(sizeof(char));
 
-    for(int i=0;i<n;i++){
+    for(int i=0;i<=n;i++){
         sets[i] = malloc(1 * sizeof(char));
     }
 
@@ -116,7 +116,7 @@ char** get_char_sets(FILE *source){
                     continue;
                 }
 
-                for(int i=n-2;i<n;i++){
+                for(int i=n-2;i<=n;i++){
                     if(0 == i%2){
                         sets[i] = realloc(sets[i], equal_pos * sizeof(char));
                     }
@@ -138,7 +138,7 @@ char** get_char_sets(FILE *source){
                 sets[n-1][strlen(line) - equal_pos - 2] = '\0';
 
                 n+=2;
-                sets = realloc(sets, n * sizeof(char*));
+                sets = realloc(sets, (n + 1) * sizeof(char*));
             }
         }
         else{
@@ -173,7 +173,6 @@ long int replace_in_file(const char **sets, FILE *file, const char *path,
          *found;
 
     size = file_size(file);
-    printf("::%d::", size);
     if(-1 != size){
 
         buffer = malloc(size * sizeof(char));
@@ -181,47 +180,48 @@ long int replace_in_file(const char **sets, FILE *file, const char *path,
 
         rewind(file);
         fread(buffer, 1, size, file);
-printf("\n\n%c\n\n", buffer);
+
         int i=0;
         do{ //search through all char sets
-            do{ //search for a character until found becomes NULL
-                found = strstr(buffer, sets[i]);
-                if(NULL != found){
+                do{ //search for a character until found becomes NULL
+                    found = strstr(buffer, sets[i]);
+                    if(NULL != found){
 
-                    //replace
-                    if(strlen(sets[i]) == strlen(sets[i+1])){
-                        strncpy(found, sets[i+1], strlen(sets[i+1]));
+                        //replace
+                        if(strlen(sets[i]) == strlen(sets[i+1])){
+                            strncpy(found, sets[i+1], strlen(sets[i+1]));
+                        }
+                        else{ //we have to modify the buffer's size
+                            int len = found - buffer,
+                                remaining_len = len + strlen(sets[i]);
+
+                            char *before = malloc(len * sizeof(char)),
+                                 *after = malloc(size - len - strlen(sets[i]));
+
+                            strncpy(before, buffer, len); //part before occurrence
+                            strcpy(after, buffer + remaining_len); //part after occurrence
+
+                            size += (strlen(sets[i+1]) - strlen(sets[i]));
+
+                            buffer = realloc(buffer, size * sizeof(char));
+                            buffer[0] = '\0';
+
+                            strcat(buffer, before);
+                            buffer[len] = '\0';
+
+                            strcat(buffer, sets[i+1]);
+                            buffer[len+strlen(sets[i+1])] = '\0';
+
+                            strcat(buffer, after);
+                            buffer[size] = '\0';
+                        }
+
+                        n++;
                     }
-                    else{ //we have to modify the buffer's size
-                        int len = found - buffer,
-                            remaining_len = len + strlen(sets[i]);
+                }while(NULL != found);
 
-                        char *before = malloc(len * sizeof(char)),
-                             *occ = malloc(strlen(sets[i+1]) * sizeof(char)),
-                             *after = malloc(size - len - strlen(sets[i])),
-                             *a = buffer[remaining_len];
-
-                        strncpy(before, buffer, len); //part before occurrence
-                        strcpy(after, buffer + remaining_len); //part after occurrence
-
-                        size += (strlen(sets[i+1]) - strlen(sets[i]));
-                        free(buffer); //empty buffer
-                        buffer = malloc(size * sizeof(char));
-                        buffer[0] = '\0';
-                        strcat(buffer, before);
-                        strcat(buffer, sets[i+1]);
-                        strcat(buffer, after);
-                    }
-
-                    //go back the size of line bytes and put the string back
-                    //into the file
-
-                    n++;
-                }
-            }while(NULL != found);
-
-            i+=2; //next char set
-        }while(NULL != sets[i]);
+                i+=2; //next char set
+        }while(NULL != sets[i] && '\0' != sets[i][0]);
 
         freopen(path, "w" ,file);
         fwrite(buffer, 1, size, file);
@@ -229,6 +229,7 @@ printf("\n\n%c\n\n", buffer);
         free(buffer);
         free(found);
     }
+
     return n;
 }
 
@@ -253,13 +254,15 @@ long int* parse_dir(const char** sets, DIR *dir, char *path){
     info[1] = 0;
 
     strcpy(def_name, path);
-    strcat(def_name, "/");
+    if('/' != def_name[strlen(def_name) - 1]){
+        strcat(def_name, "/");
+    }
 
     while(NULL != (entry = readdir(dir))){
         if(0 != strcmp(entry->d_name, ".") && 0 != strcmp(entry->d_name, "..")){
 
             name = realloc(name,
-                strlen(def_name) * sizeof(char) + strlen(entry->d_name));
+                    strlen(def_name) * sizeof(char) + strlen(entry->d_name));
             strcpy(name, def_name);
 
             strcat(name, entry->d_name);
@@ -274,27 +277,20 @@ long int* parse_dir(const char** sets, DIR *dir, char *path){
 
                 info[0] += info_sub[0];
                 info[1] += info_sub[1];
-
-                closedir(sub_dir);
-
-                /*printf("\n--%s--\n", entry->d_name);*/
             }
             else{
                 FILE *file;
-
-                /*printf("\n<-%s->\n", name);*/
 
                 file = fopen(name, "r+");
                 if(NULL != file){
 
                     info[1] += replace_in_file(sets, file, name, "w");
                     info[0]++;
-
                     fclose(file);
                 }
             }
         }
     }
-
+    closedir(dir);
     return info;
 }

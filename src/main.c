@@ -16,7 +16,7 @@
 int main(int argc, char *argv[]){
 
     int argNum = 1;
-    long int position = -1, replacements, *file_stats;
+    long int position = -1, *file_stats;
 
     char *path = malloc((strlen(DEF_PATH)+1) * sizeof(char)),
          *config = malloc((strlen(DEF_CONFIG)+1) * sizeof(char)),
@@ -145,10 +145,15 @@ int main(int argc, char *argv[]){
         closedir(path_dir);
         free(path_dir);
 
+        file_stats = malloc(2 * sizeof(long int));
+        file_stats[0] = 0;
+        file_stats[1] = 0;
+
         path_file = fopen(path, "r+");
 
         if(NULL != path_file){
-            replacements = replace_in_file(sets, path_file, path, "w");
+            file_stats[0]++;
+            file_stats[1] = replace_in_file(sets, path_file, path, "w");
         }
         else{
             printf("Invalid path!\n");
@@ -157,6 +162,8 @@ int main(int argc, char *argv[]){
     }
 
     printf("\n---%ld,%ld---\n", file_stats[0], file_stats[1]);
+
+    free(file_stats);
 
     exit(OK);
 }
