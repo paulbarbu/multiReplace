@@ -54,6 +54,10 @@ int main(int argc, char *argv[]){
             else{
                 path = realloc(path, (strlen(argv[argNum])+1) * sizeof(char));
                 strcpy(path, argv[argNum]);
+
+                if('.' == path[0] && '/' == path[1]){
+                    strcpy(path, path + 2);
+                }
             }
         }
         /**
@@ -104,8 +108,6 @@ int main(int argc, char *argv[]){
         argNum++;
     } //finished processing arguments
 
-    printf("%s\n%s\n%s\n", path, lang, config); //delete this when publishing
-
     /**
      * Check if the config file is a valid file
      */
@@ -118,10 +120,12 @@ int main(int argc, char *argv[]){
             rewind(config_file);
 
             char *comment = malloc(82 * sizeof(char));
-            do{
+            fgets(comment, 82, config_file);
+            while(';' == comment[0] || '\n' == comment[0]
+                    || '\0' == comment[0]){
                 fgets(comment, 82, config_file);
-            }while(';' == comment[0] || '\n' == comment[0]
-                    || '\0' == comment[0]);
+            }
+            fseek(config_file, -1 * strlen(comment), SEEK_SET);
         }
 
         sets = get_char_sets(config_file);
@@ -160,8 +164,16 @@ int main(int argc, char *argv[]){
             exit(ERR_PATH);
         }
     }
-
-    printf("\n---%ld,%ld---\n", file_stats[0], file_stats[1]);
+    printf("Path: %s\n", path);
+    printf("Config: %s\n", config);
+    if(-1 != position){
+        printf("Lang(section): %s\n", lang);
+    }
+    else{
+        printf("Lang(section): First section from config\n");
+    }
+    printf("Total files processed: %ld\n", file_stats[0]);
+    printf("Total replacements: %ld\n", file_stats[1]);
 
     free(file_stats);
 

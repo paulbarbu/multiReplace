@@ -110,7 +110,6 @@ char** get_char_sets(FILE *source){
             if(';' != line[0] && '\n' != line[0] && '\0' != line[0]){
                 if(NULL != (equal = strstr(line, "="))){
                     equal_pos = equal - line;
-                    printf("\n!!%d!!\n", equal_pos);
                 }
                 else{
                     continue;
@@ -147,12 +146,6 @@ char** get_char_sets(FILE *source){
 
     }while(!feof(source));
 
-    /*int i=2;*/
-    /*while(NULL != sets[i-1]){*/
-        /*printf("\n:: %s(%d) = %s(%d) ::\n", sets[i-2], strlen(sets[i-2]), sets[i-1], strlen(sets[i-1]));*/
-        /*i+=2;*/
-    /*}*/
-
     return sets;
 }
 
@@ -185,7 +178,7 @@ long int replace_in_file(const char **sets, FILE *file, const char *path,
         do{ //search through all char sets
                 do{ //search for a character until found becomes NULL
                     found = strstr(buffer, sets[i]);
-                    if(NULL != found){
+                    if(NULL != found && '\0' != sets[i][0]){
 
                         //replace
                         if(strlen(sets[i]) == strlen(sets[i+1])){
@@ -218,7 +211,7 @@ long int replace_in_file(const char **sets, FILE *file, const char *path,
 
                         n++;
                     }
-                }while(NULL != found);
+                }while(NULL != found && '\0' != sets[i][0]);
 
                 i+=2; //next char set
         }while(NULL != sets[i] && '\0' != sets[i][0]);
@@ -227,7 +220,6 @@ long int replace_in_file(const char **sets, FILE *file, const char *path,
         fwrite(buffer, 1, size, file);
 
         free(buffer);
-        free(found);
     }
 
     return n;
