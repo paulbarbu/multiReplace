@@ -1,19 +1,15 @@
 multiReplace
 =======
 
-![Work in progress](https://github.com/paullik/multiReplace/raw/master/wip.png 
-"Work in progress")
-
 This is an extensible, cross-platform, command line tool written in C for fast
-find & replace ugly characters with normal ones(often happening when subtitles
-contain language-specific letters) in multiple files at a time.
+find & replace strings in multiple files at a time.
 
-The character sets and their replacement are stored in \*.ini files as pairs.
+The strings and their replacement are stored in \*.ini files as pairs.
 
 Defaults
 ========
 
-Default path: . (current directory)
+Default path: ./files
 
 Default configuration file: ./config/default.ini
 
@@ -27,7 +23,7 @@ Just a test config for now...
 Basic usage
 ===========
 
-./mr -p path/to/subtitles -c path/to/config/default.ini -l RO
+./mr -p path/to/directory\_or\_file -c path/to/config/default.ini -l section
 
 Compilation
 ============
@@ -39,7 +35,7 @@ History
 
 Original name: subEDIT
 Its original purpose was to replace characters in subtitles, now its purpose is
-generally to replace characters in files
+generally to replace strings in files
 
 License
 =======
