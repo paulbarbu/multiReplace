@@ -102,7 +102,7 @@ int main(int argc, char *argv[]){
             }
         }
         else{
-            printf("Unknown argument\n");
+            printf("Unknown argument: %s\n", argv[argNum]);
             exit(ERR_ARG);
         }
         argNum++;
@@ -131,7 +131,7 @@ int main(int argc, char *argv[]){
         sets = get_char_sets(config_file);
     }
     else{
-        printf("Invalid configuration file!\n");
+        printf("Invalid configuration file: %s\n", config);
         exit(ERR_CFG_FILE);
     }
 
@@ -160,7 +160,7 @@ int main(int argc, char *argv[]){
             file_stats[1] = replace_in_file(sets, path_file, path, "w");
         }
         else{
-            printf("Invalid path!\n");
+            printf("Invalid path: %s\n", path);
             exit(ERR_PATH);
         }
     }
