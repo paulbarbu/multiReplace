@@ -160,10 +160,12 @@ char** get_char_sets(FILE *source){
  */
 long int replace_in_file(const char **sets, FILE *file, const char *path,
                             const char *mode){
-    long int n = 0, size = 0;
+    long int n = 0, size = 0, len, remaining_len;
 
     char *buffer,
-         *found;
+         *found,
+         *before,
+         *after;
 
     size = file_size(file);
     if(-1 != size){
@@ -185,11 +187,11 @@ long int replace_in_file(const char **sets, FILE *file, const char *path,
                             strncpy(found, sets[i+1], strlen(sets[i+1]));
                         }
                         else{ //we have to modify the buffer's size
-                            int len = found - buffer,
-                                remaining_len = len + strlen(sets[i]);
+                           len = found - buffer,
+                           remaining_len = len + strlen(sets[i]);
 
-                            char *before = malloc(len * sizeof(char)),
-                                 *after = malloc(size - len - strlen(sets[i]));
+                            before = malloc(len * sizeof(char));
+                            after = malloc(size - len - strlen(sets[i]));
 
                             strncpy(before, buffer, len); //part before occurrence
                             strcpy(after, buffer + remaining_len); //part after occurrence
@@ -207,6 +209,9 @@ long int replace_in_file(const char **sets, FILE *file, const char *path,
 
                             strcat(buffer, after);
                             buffer[size] = '\0';
+
+                            free(before);
+                            free(after);
                         }
 
                         n++;
@@ -286,3 +291,4 @@ long int* parse_dir(const char** sets, DIR *dir, char *path){
     closedir(dir);
     return info;
 }
+
