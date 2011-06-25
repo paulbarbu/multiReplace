@@ -9,33 +9,34 @@ The strings and their replacement are stored in \*.ini files as pairs.
 Defaults
 ========
 
-Default path: ./files
+Default path: `./files`
 
-Default configuration file: ./config/default.ini
+Default configuration file: `./config/default.ini`
 
 Default language: first to be found in the configuration file
 
 Configs
 =======
 
-Just a test config for now...
+No standard config is supplied!
+Please create your own, suitable for your needs.
 
 Basic usage
 ===========
 
-./mr -p path/to/directory\_or\_file -c path/to/config/default.ini -l section
+`./mr -p path/to/directory_or_file -c path/to/config/default.ini -l section`
 
 Compilation
 ============
 
-Just use 'make' in multiReplace's root directory
+Just use `make` in multiReplace's root directory
 
 History
 =======
 
 Original name: subEDIT
 Its original purpose was to replace characters in subtitles, now its purpose is
-generally to replace strings in files
+generally to replace strings in files.
 
 License
 =======
