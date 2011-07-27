@@ -5,4 +5,5 @@
 *.exe
 *.swp
 *~
+*.pyc
 /src/mr
