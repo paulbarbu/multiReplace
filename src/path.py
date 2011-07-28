@@ -11,7 +11,9 @@ class Path(object):
     A path to a directory has a trailing '/', a file path doesn't
     '''
 
-    #TODO cache the stat response, maybe a new class? Cache
+    #TODO implement Cache
+    #TODO self._exists, will be set by exists()
+    #TODO enhanced docs
 
     def __init__(self, path = None):
         self._path = None
@@ -54,13 +56,27 @@ class Path(object):
 
             #return just the interesting bits
             return oct(full_permissions)[-4:]
+        else:
+            raise InexistentPathError(self._path)
 
     def setPerm(self, rights):
         '''Set the specified permissions on the path pointed by self._path
 
-        Rights parameter must be passed as an octal value, eg: 0550, 0775, 0777
+        @throws InexistentPathError if the path doesn't exist
+        @param rights must be passed as an octal value, eg: 0550, 0775, 0777
+
+        @retval bool, True is chmod succeeded, otherwise False
         '''
-        pass
+
+        if self.exists():
+            try:
+                os.chmod(self._path, rights)
+            except OSError as detail:
+                raise detail
+
+            return True
+        else:
+            raise InexistentPathError(self._path)
 
     def getOwner(self):
         '''Get the owner's path name into _owner and the UID into _uid
@@ -69,6 +85,7 @@ class Path(object):
         Return a list [_uid, _owner]
         If the path does not exist, returns None
         '''
+        #TODO use User class
 
         if self.exists():
             path_stat = os.stat(self._path)
@@ -77,6 +94,8 @@ class Path(object):
             self._owner = pwd.getpwuid(self._uid)[0]
 
             return [self._uid, self._owner]
+        else:
+            raise InexistentPathError(self._path)
 
     def getGroup(self):
         '''Get the group name and GID that has permissions on _path
@@ -91,6 +110,8 @@ class Path(object):
             self._group = grp.getgrgid(self._gid)[0]
 
             return [self._gid, self._group]
+        else:
+            raise InexistentPathError(self._path)
 
     def make(self, parentMustExist = False):
         '''Create a path
@@ -103,3 +124,14 @@ class Path(object):
         created
         '''
         pass
+
+class InexistentPathError(Exception):
+    '''This exception is raised when trying to access or use an inexistent path
+
+    '''
+
+    def __init__(self, path):
+        self._path = path
+
+    def __str__(self):
+        return self._path
