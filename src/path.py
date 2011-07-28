@@ -4,54 +4,79 @@ import pwd
 import grp
 
 from functions import *
+from user import User
 
 class Path(object):
     '''Blueprint for Path objects
 
-    A path to a directory has a trailing '/', a file path doesn't
+    A directory path has a trailing '/', a file path doesn't
     '''
 
-    #TODO implement Cache
-    #TODO self._exists, will be set by exists()
-    #TODO enhanced docs
+    #TODO implement Cache, User, Group, PathValidator
 
     def __init__(self, path = None):
         self._path = None
+        self._owner = None
+        self._group = None
+        self._gid = None
+        self._exists = False
 
         if path:
             self._path = path
+            self.exists()
 
     def getPath(self):
+        '''Returns the current path
+
+        '''
         return self._path
 
     def setPath(self, path):
+        '''Sets self._path
+
+        @param path string representing the path
+        '''
         if path:
             self._path = path
+            self.exists()
 
     def exists(self):
-        '''Check if a file exists at the path pointed by self._path
+        '''Checks if a file or directory exists at the path pointed by self._path
 
+        It also sets self._exists
+
+        @return bool
         '''
 
-        if not os.path.exists(self._path):
-            return False
+        self._exists = True
 
-        return True
+        if not os.path.exists(self._path):
+            self._exists = False;
+
+        return self._exists
 
     def hasRights(self, r = True, w = False, x = False):
         '''Check if the current user has read, write or execute rights on
         self._path
+
+        @throws InexistentPathError if the path doesn't exist
+
+        @param r bool value indicating if read permissions will be checked
+        @param w bool value indicating if write permissions will be checked
+        @param x bool value indicating if execute permissions will be checked
+
+        @return bool
         '''
         pass
 
     def getPerm(self):
         '''Get the octal representation of the current permissions on self._path
 
-        if the path is inexistent it returns None
+        @throws InexistentPathError if the path doesn't exist
         '''
 
-        if self.exists():
-            path_stat = os.stat(self._path)
+        if self._exists:
+            path_stat = os.stat(self._path)#TODO: USE cache
             full_permissions = path_stat[stat.ST_MODE]
 
             #return just the interesting bits
@@ -63,12 +88,14 @@ class Path(object):
         '''Set the specified permissions on the path pointed by self._path
 
         @throws InexistentPathError if the path doesn't exist
+        @throws the same exceptions as os.chmod() if it fails
+
         @param rights must be passed as an octal value, eg: 0550, 0775, 0777
 
         @retval bool, True is chmod succeeded, otherwise False
         '''
 
-        if self.exists():
+        if self._exists:
             try:
                 os.chmod(self._path, rights)
             except OSError as detail:
@@ -79,32 +106,40 @@ class Path(object):
             raise InexistentPathError(self._path)
 
     def getOwner(self):
-        '''Get the owner's path name into _owner and the UID into _uid
+        '''Gets the path's owner, if it's not already set it will be set
 
+        @throws InexistentPathError if the path doesn't exist
 
-        Return a list [_uid, _owner]
-        If the path does not exist, returns None
+        @return an User object
         '''
-        #TODO use User class
 
-        if self.exists():
-            path_stat = os.stat(self._path)
-            self._uid = path_stat[stat.ST_UID]
+        if self._exists:
 
-            self._owner = pwd.getpwuid(self._uid)[0]
+            if not self._owner:
+                path_stat = os.stat(self._path)#TODO: USE cache
+                uid = path_stat[stat.ST_UID]
 
-            return [self._uid, self._owner]
+                owner = User(uid = uid)
+
+                self._owner = owner
+
+            return self._owner
         else:
             raise InexistentPathError(self._path)
 
     def getGroup(self):
         '''Get the group name and GID that has permissions on _path
 
-        Populate _group and _gid, returns [_gid, _group]
+        @throws InexistentPathError if the path doesn't exist
+
+        It populates _group and _gid
+        @return [_gid, _group]
         '''
 
-        if self.exists():
-            path_stat = os.stat(self._path)
+        #TODO: Group class
+
+        if self._exists:
+            path_stat = os.stat(self._path)#TODO: USE cache
             self._gid = path_stat[stat.ST_GID]
 
             self._group = grp.getgrgid(self._gid)[0]
@@ -116,17 +151,20 @@ class Path(object):
     def make(self, parentMustExist = False):
         '''Create a path
 
-        parentMustExist parameter specifies whether the path will be created if
+        @throws InexistentPathError if the path doesn't exist
+        @throws the same exceptions as open() and os.mkdir() if they fail
+
+        @param parentMustExist specifies whether the path will be created if
         the leading directories exists or if they will be created too(the whole
         structure will be created), see 'mkdir -p'
 
         If the path is a file, it will be touch'ed, else a directory will be
         created
-        '''
+        '''#TODO validate self._exists
         pass
 
 class InexistentPathError(Exception):
-    '''This exception is raised when trying to access or use an inexistent path
+    '''This exception is raised when trying to use an inexistent path
 
     '''
 
