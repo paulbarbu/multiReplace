@@ -1,10 +1,10 @@
 multiReplace
 =======
 
-This is an extensible, cross-platform, command line tool written in C for fast
+This is an extensible, cross-platform, command line tool written in Python for fast
 find & replace strings in multiple files at a time.
 
-The strings and their replacement are stored in \*.ini files as pairs.
+The strings and their replacement are stored in \*.ini files(config files) as pairs.
 
 Defaults
 ========
@@ -34,7 +34,9 @@ Just use `make` in multiReplace's root directory
 History
 =======
 
-Original name: subEDIT
+2. multiReplace written in C, now becomes Pythonic multiReplace
+
+1. Original name: subEDIT
 Its original purpose was to replace characters in subtitles, now its purpose is
 generally to replace strings in files.
 
