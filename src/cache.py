@@ -2,15 +2,20 @@ class Cache(object):
     '''Class for caching
     '''
 
-    def __init__(self, key, item):
-        self._content = {key: item}
+    def __init__(self, content = {}):
+            self._content = content
 
-    def add(self, key, item):
+    def add(self, key, item, overwrite = False):
         '''Adds the dict {key: item} to self._content
-        '''
-        self._content[key] = item
 
-    def get(self):
+        If overwrite is True, then if that key already exists it will be
+        overwritten
+        '''
+
+        if overwrite and key in self._content or key not in self._content:
+            self._content[key] = item
+
+    def get(self):#TODO getItem
         '''Returns the contents of the cache
         '''
         return self._content
@@ -18,7 +23,7 @@ class Cache(object):
     def empty(self):
         '''Empties the cache
 
-        Sets self._content to None
+        Clears the self._content dictionary
         '''
         self._content.clear()
 
