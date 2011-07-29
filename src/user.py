@@ -67,6 +67,8 @@ class User(object):
         else:
             raise UidNotSet()
 
+#TODO NotSetError(self, name)
+#TODO error code, message
 class NameNotSet(Exception):
     '''Raised when the user's name is needed, but not set
     '''
