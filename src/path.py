@@ -162,11 +162,13 @@ class Path(object):
 
         @return bool True if the path was created, False otherwise
 
-        If the path is a file, it will be touch'ed, else a directory will be
-        created
+        If the path is a file, it will be touch'ed, else a directory [structure]
+        will be created
 
         A directory path has a trailing '/', a file path doesn't
-        '''#TODO validate self._exists
+
+        Also self._exists is set to True if the creation was successful
+        '''
 
         if self._exists and overwrite or not self._exists:
             if self._path[-1] == os.sep: #create a dir [structure]
@@ -208,6 +210,7 @@ class Path(object):
                     except IOError as detail:
                         raise detail
 
+            self._exists = True
             return True
         else:
             return False
