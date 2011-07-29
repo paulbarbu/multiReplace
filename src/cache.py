@@ -25,6 +25,9 @@ class Cache(object):
     def delete(self, key):
         '''Deletes the item with 'key' from the cache
 
+        @throws InexistentCacheKey if the key doesn't exists in
+        self._content
+
         @return the deleted item's value
         '''
 
