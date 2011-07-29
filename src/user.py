@@ -9,6 +9,8 @@ class User(object):
     getNameByUid(), else NameNotSet or UidNotSet will be raised
     '''
 
+    #TODO do i need getName, getUid, to get the current UID and username?
+
     def __init__(self, uid = None, name = None):
         '''
         self._name, user's name, string
