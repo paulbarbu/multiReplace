@@ -15,10 +15,17 @@ class Cache(object):
         if overwrite and key in self._content or key not in self._content:
             self._content[key] = item
 
-    def get(self):#TODO getItem
-        '''Returns the contents of the cache
+    def getItem(self, key):#TODO getItem
+        '''Get an item from the cache
+
+        @param key the item's key to be returned
+
+        @return the item identified by key or None if that item doesn't exists
         '''
-        return self._content
+        if key in self._content:
+            return self._content[key]
+        else:
+            return None
 
     def empty(self):
         '''Empties the cache
