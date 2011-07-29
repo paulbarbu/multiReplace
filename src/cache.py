@@ -2,15 +2,13 @@ class Cache(object):
     '''Class for caching
     '''
 
-    def __init__(self, content = None):
-        self._content = content
+    def __init__(self, key, item):
+        self._content = {key: item}
 
-    def set(self, content):
-        '''Fills the cache
-
-        @param content the value the will be assigned to self._content
+    def add(self, key, item):
+        '''Adds the dict {key: item} to self._content
         '''
-        self._content = content
+        self._content[key] = item
 
     def get(self):
         '''Returns the contents of the cache
@@ -22,15 +20,39 @@ class Cache(object):
 
         Sets self._content to None
         '''
-        self._content = None
+        self._content.clear()
+
+    def delete(self, key):
+        '''Deletes the item with 'key' from the cache
+
+        @return the deleted item's value
+        '''
+
+        if key in self._content:
+            deleted_item = self._content[key]
+            del self._content[key]
+
+            return deleted_item
+        else:
+            raise InexistentCacheKey(key)
+
 
     def isEmpty(self):
         '''Checks whether the cache is empty
 
-        @return bool True if the cache is empty(None or ''), otherwise False
+        @return bool True if the cache is empty, otherwise False
         '''
 
         if self._content:
             return False
 
         return True
+
+class InexistentCacheKey(Exception):
+    '''Raised when trying to access an inexistent dictionary entry by its key
+    '''
+    def __init__(self, key):
+        self._key = key
+
+    def __str__(self):
+        return self._key
