@@ -29,7 +29,6 @@ class Path(object):
         '''Returns the current path
 
         '''
-        #TODO check the trailing slash
         return self._path
 
     def setPath(self, path):
