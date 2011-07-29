@@ -29,6 +29,7 @@ class Path(object):
         '''Returns the current path
 
         '''
+        #TODO check the trailing slash
         return self._path
 
     def setPath(self, path):
@@ -148,20 +149,68 @@ class Path(object):
         else:
             raise InexistentPathError(self._path)
 
-    def make(self, parentMustExist = False):
-        '''Create a path
+    def make(self, overwrite = False, parentMustExist = False):
+        '''Create a file or dir at the location pointed by path
 
-        @throws InexistentPathError if the path doesn't exist
-        @throws the same exceptions as open() and os.mkdir() if they fail
+        @throws the same exceptions as open(), os.makedirs() and os.mkdir()
 
-        @param parentMustExist specifies whether the path will be created if
+        @param overwrite bool, if True the FILE will be overwritten if it
+        exists
+        @param parentMustExist specifies whether the path will be created ONLY if
         the leading directories exists or if they will be created too(the whole
         structure will be created), see 'mkdir -p'
 
+        @return bool True if the path was created, False otherwise
+
         If the path is a file, it will be touch'ed, else a directory will be
         created
+
+        A directory path has a trailing '/', a file path doesn't
         '''#TODO validate self._exists
-        pass
+
+        if self._exists and overwrite or not self._exists:
+            if self._path[-1] == os.sep: #create a dir [structure]
+                if parentMustExist:
+                    self._path = self._path[:-1]
+                    parent = os.path.split(self._path)[0]
+
+                    if os.path.exists(parent):
+                        try:
+                            os.mkdir(self._path)
+                        except OSError as detail:
+                            raise detail
+                    else:
+                        return False
+                else:
+                    try:
+                        os.makedirs(self._path)
+                    except OSError as detail:
+                        raise detail
+            else: #create a file
+                parent, file_name = os.path.split(self._path)
+
+                if parentMustExist:
+                    if os.path.exists(parent):
+                        try:
+                            open(self._path, 'w').close()
+                        except IOError as detail:
+                            raise detail
+                    else:
+                        return False
+                else:
+                    try:
+                        os.makedirs(parent)
+                    except OSError as detail:
+                        raise detail
+
+                    try:
+                        open(self._path, 'w').close()
+                    except IOError as detail:
+                        raise detail
+
+            return True
+        else:
+            return False
 
 class InexistentPathError(Exception):
     '''This exception is raised when trying to use an inexistent path
