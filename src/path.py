@@ -1,10 +1,10 @@
 import stat
 import os
-import pwd
 import grp
 
 from functions import *
 from user import User
+from cache import Cache
 
 class Path(object):
     '''Blueprint for Path objects
@@ -13,6 +13,7 @@ class Path(object):
     '''
 
     #TODO implement Cache, User, Group, PathValidator
+    #TODO remove unused imports
 
     def __init__(self, path = None):
         self._path = None
