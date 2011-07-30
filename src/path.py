@@ -5,6 +5,7 @@ import grp
 from functions import *
 from user import User
 from cache import Cache
+from exception import *
 
 class Path(object):
     '''Blueprint for Path objects
@@ -213,14 +214,3 @@ class Path(object):
             return True
         else:
             return False
-
-class InexistentPathError(Exception):
-    '''This exception is raised when trying to use an inexistent path
-
-    '''
-
-    def __init__(self, path):
-        self._path = path
-
-    def __str__(self):
-        return 'The path does not exist: {0}'.format(self._path)

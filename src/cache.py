@@ -1,3 +1,5 @@
+from exception import *
+
 class Cache(object):
     '''Class for caching
     '''
@@ -62,12 +64,3 @@ class Cache(object):
             return False
 
         return True
-
-class InexistentCacheKey(Exception):
-    '''Raised when trying to access an inexistent dictionary entry by its key
-    '''
-    def __init__(self, key):
-        self._key = key
-
-    def __str__(self):
-        return 'Inexistent key entry: {0}'.format(self._key)

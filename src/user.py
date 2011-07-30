@@ -1,5 +1,6 @@
 import pwd
-from functions import *
+
+from exception import *
 
 class User(object):
     '''User blueprint
@@ -61,15 +62,3 @@ class User(object):
             return self._name
         else:
             raise NotSetError('UID')
-
-#TODO error code
-class NotSetError(Exception):
-    '''Raised when the user's property is needed, but not set
-    '''
-
-    def __init__(self, prop):
-        self._prop = prop
-
-    def __str__(self):
-        return 'Cannot use a property before it\'s set: {0}'\
-                .format(self._prop)
