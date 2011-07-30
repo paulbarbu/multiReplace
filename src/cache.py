@@ -15,7 +15,7 @@ class Cache(object):
         if overwrite and key in self._content or key not in self._content:
             self._content[key] = item
 
-    def getItem(self, key):#TODO getItem
+    def getItem(self, key):
         '''Get an item from the cache
 
         @param key the item's key to be returned
@@ -70,4 +70,4 @@ class InexistentCacheKey(Exception):
         self._key = key
 
     def __str__(self):
-        return self._key
+        return 'Inexistent key entry: {0}'.format(self._key)

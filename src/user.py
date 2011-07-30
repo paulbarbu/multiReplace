@@ -32,7 +32,7 @@ class User(object):
     def getUidByName(self):
         '''Get the UID of the user
 
-        @throws NameNotSet if trying to use this method before the user's name
+        @throws NotSetError if trying to use this method before the user's name
         is set
         @throws KeyError when the user is not found
 
@@ -47,12 +47,12 @@ class User(object):
 
             return self._uid
         else:
-            raise NameNotSet()
+            raise NotSetError('name')
 
     def getNameByUid(self):
         '''Get the user's name by his UID
 
-        @throws UIDNotSet if trying to use this method before the UID is set
+        @throws NotSetError if trying to use this method before the UID is set
         @throws KeyError when the UID is not found
 
         Populate _name and return it
@@ -65,16 +65,16 @@ class User(object):
 
             return self._name
         else:
-            raise UidNotSet()
+            raise NotSetError('UID')
 
-#TODO NotSetError(self, name)
-#TODO error code, message
-class NameNotSet(Exception):
-    '''Raised when the user's name is needed, but not set
+#TODO error code
+class NotSetError(Exception):
+    '''Raised when the user's property is needed, but not set
     '''
-    pass
 
-class UidNotSet(Exception):
-    '''Raised when the UID is needed, but not set
-    '''
-    pass
+    def __init__(self, prop):
+        self._prop = prop
+
+    def __str__(self):
+        return 'Cannot use a property before it\'s set: {0}'\
+                .format(self._prop)

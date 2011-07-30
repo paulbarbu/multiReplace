@@ -13,7 +13,6 @@ class Path(object):
     '''
 
     #TODO implement Cache, User, Group, PathValidator
-    #TODO remove unused imports
 
     def __init__(self, path = None):
         self._path = None
@@ -224,4 +223,4 @@ class InexistentPathError(Exception):
         self._path = path
 
     def __str__(self):
-        return self._path
+        return 'The path does not exist: {0}'.format(self._path)
