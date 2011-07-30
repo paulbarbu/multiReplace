@@ -15,6 +15,7 @@ class Path(object):
 
     #TODO implement Group, PathValidator
     #TODO cache all paths/users in a single object
+    #TODO import traceback
 
     def __init__(self, path = None):
         self._path = None
@@ -217,10 +218,11 @@ class Path(object):
                     else:
                         return False
                 else:
-                    try:
-                        os.makedirs(parent)
-                    except OSError as detail:
-                        raise detail
+                    if not os.path.exists(parent):
+                        try:
+                            os.makedirs(parent)
+                        except OSError as detail:
+                            raise detail
 
                     try:
                         open(self._path, 'w').close()
