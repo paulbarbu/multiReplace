@@ -2,7 +2,7 @@ import stat
 import os
 import grp
 
-from functions import *
+from functions import * #TODO remove this
 from user import User
 from cache import Cache
 from exception import *
@@ -13,7 +13,8 @@ class Path(object):
     A directory path has a trailing '/', a file path doesn't
     '''
 
-    #TODO implement Cache, User, Group, PathValidator
+    #TODO implement Group, PathValidator
+    #TODO cache all paths/users in a single object
 
     def __init__(self, path = None):
         self._path = None
@@ -68,7 +69,23 @@ class Path(object):
 
         @return bool
         '''
-        pass
+
+        if self._path:
+            permissions = 0
+
+            if r:
+                permissions = os.R_OK
+
+            if w:
+                permissions = permissions | os.W_OK
+
+            if x:
+                permissions = permissions | os.X_OK
+
+            return os.access(self._path, permissions)
+
+        else:
+            raise InexistentPathError(self._path)
 
     def getPerm(self):
         '''Get the octal representation of the current permissions on self._path
