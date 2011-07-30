@@ -29,3 +29,13 @@ class InexistentCacheKey(Exception):
 
     def __str__(self):
         return 'Inexistent key entry: {0}'.format(self._key)
+
+class EmptyCollectionError(Exception):
+    '''Raised when an action is performed on an empty collection
+    '''
+
+    def __init__(self, action):
+        self._action = action
+
+    def __str__(self):
+        return 'Cannot {0} an empty collection!'.format(self._action)
