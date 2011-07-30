@@ -4,12 +4,7 @@ from functions import *
 class User(object):
     '''User blueprint
 
-    The name is independent from the UID, the only condition is that _name must
-    be set when calling getUidByName() and _uid must be set when calling
-    getNameByUid(), else NameNotSet or UidNotSet will be raised
     '''
-
-    #TODO do i need getName, getUid, to get the current UID and username?
 
     def __init__(self, uid = None, name = None):
         '''
@@ -24,12 +19,12 @@ class User(object):
         '''
         self._name = name
 
-    def setUid(self, uid):
+    def setUID(self, uid):
         '''Sets the user's UID
         '''
         self._uid = uid
 
-    def getUidByName(self):
+    def getUID(self):
         '''Get the UID of the user
 
         @throws NotSetError if trying to use this method before the user's name
@@ -49,8 +44,8 @@ class User(object):
         else:
             raise NotSetError('name')
 
-    def getNameByUid(self):
-        '''Get the user's name by his UID
+    def getName(self):
+        '''Get the user's name
 
         @throws NotSetError if trying to use this method before the UID is set
         @throws KeyError when the UID is not found
