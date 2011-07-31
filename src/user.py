@@ -7,22 +7,43 @@ class User(object):
 
     '''
 
-    def __init__(self, uid = None, name = None):
+    def __init__(self, uid = None, name = None, cache = None):
         '''
         self._name, user's name, string
         self._uid, user's UID, int
         '''
         self._uid = uid
         self._name = name
+        self._cache = cache
 
     def setName(self, name):
         '''Set's the user's name
         '''
+
+        if self._cache:
+            pwnam = self._cache.getItem(self._name)
+            if pwnam:
+                self._cache.delete(self._name) #invalidate cache
+
+            pwuid = self._cache.getItem(self._uid)
+            if pwuid:
+                self._cache.delete(self._uid) #invalidate cache
+
         self._name = name
 
     def setUID(self, uid):
         '''Sets the user's UID
         '''
+
+        if self._cache:
+            pwuid = self._cache.getItem(self._uid)
+            if pwuid:
+                self._cache.delete(self._uid) #invalidate cache
+
+            pwnam = self._cache.getItem(self._name)
+            if pwnam:
+                self._cache.delete(self._name) #invalidate cache
+
         self._uid = uid
 
     def getUID(self):
@@ -36,10 +57,20 @@ class User(object):
         '''
 
         if self._name:
-            try:
-                self._uid = pwd.getpwnam(self._name)[2]
-            except KeyError as detail:
-                raise detail
+            if self._cache:
+                pwnam = self._cache.getItem(self._name)
+
+                if not pwnam:
+                    pwnam = pwd.getpwnam(self._name)
+                    self._cache.add(self._name, pwnam)
+
+                self._uid = pwnam[2]
+
+            else:
+                try:
+                    self._uid = pwd.getpwnam(self._name)[2]
+                except KeyError as detail:
+                    raise detail
 
             return self._uid
         else:
@@ -54,10 +85,20 @@ class User(object):
         Populate _name and return it
         '''
         if self._uid:
-            try:
-                self._name = pwd.getpwuid(self._uid)[0]
-            except KeyError as detail:
-                    raise detail
+            if self._cache:
+                pwuid = self._cache.getItem(self._uid)
+
+                if not pwuid:
+                    pwuid = pwd.getpwuid(self._uid)
+                    self._cache.add(self._uid, pwuid)
+
+                self._name = pwuid[0]
+
+            else:
+                try:
+                    self._name = pwd.getpwuid(self._uid)[0]
+                except KeyError as detail:
+                        raise detail
 
             return self._name
         else:

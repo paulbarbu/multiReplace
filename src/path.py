@@ -13,16 +13,19 @@ class Path(object):
     A directory path has a trailing '/', a file path doesn't
     '''
 
-    #TODO implement Group, PathValidator
-    #TODO cache all paths/users in a single object
+    #TODO implement Group
     #TODO import traceback
 
-    def __init__(self, path = None):
+    def __init__(self, path = None, cache = None):
+        '''
+        @param cache a cache object created before Path instantiation
+        '''
         self._path = None
         self._owner = None
         self._group = None
         self._gid = None
         self._exists = False
+        self._cache = cache
 
         if path:
             self._path = path
@@ -40,6 +43,10 @@ class Path(object):
         @param path string representing the path
         '''
         if path:
+            if self._cache:
+                if self._cache.getItem(self._path):
+                    self._cache.delete(self._path) #invalidate cache
+
             self._path = path
             self.exists()
 
@@ -95,8 +102,18 @@ class Path(object):
         '''
 
         if self._exists:
-            path_stat = os.stat(self._path)#TODO: USE cache
-            full_permissions = path_stat[stat.ST_MODE]
+            if self._cache:
+                path_stat = self._cache.getItem(self._path)
+
+                if not path_stat: #cache miss
+                    path_stat = os.stat(self._path)
+                    self._cache.add(self._path, path_stat) #validate cache
+
+                full_permissions = path_stat[stat.ST_MODE]
+
+            else:
+                path_stat = os.stat(self._path)
+                full_permissions = path_stat[stat.ST_MODE]
 
             #return just the interesting bits
             return oct(full_permissions)[-4:]
@@ -120,6 +137,10 @@ class Path(object):
             except OSError as detail:
                 raise detail
 
+            if self._cache:
+                if self._cache.getItem(self._path):
+                    self._cache.delete(self._path) #invalidate cache
+
             return True
         else:
             raise InexistentPathError(self._path)
@@ -135,8 +156,17 @@ class Path(object):
         if self._exists:
 
             if not self._owner:
-                path_stat = os.stat(self._path)#TODO: USE cache
-                uid = path_stat[stat.ST_UID]
+                if self._cache:
+                    path_stat = self._cache.getItem(self._path)
+
+                    if not path_stat:
+                        path_stat = os.stat(self._path)
+                        self._cache.add(self._path, path_stat) #validate cache
+
+                    uid = path_stat[stat.ST_UID]
+                else:
+                    path_stat = os.stat(self._path)
+                    uid = path_stat[stat.ST_UID]
 
                 owner = User(uid = uid)
 
@@ -158,7 +188,15 @@ class Path(object):
         #TODO: Group class
 
         if self._exists:
-            path_stat = os.stat(self._path)#TODO: USE cache
+            if self._cache:
+                path_stat = self._cache.getItem(self._path)
+
+                if not path_stat:
+                    path_stat = os.stat(self._path)
+                    self._cache.add(self._path, path_stat) #validate cache
+            else:
+                path_stat = os.stat(self._path)
+
             self._gid = path_stat[stat.ST_GID]
 
             self._group = grp.getgrgid(self._gid)[0]
