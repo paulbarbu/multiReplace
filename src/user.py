@@ -30,6 +30,7 @@ class User(object):
                 self._cache.delete(self._uid) #invalidate cache
 
         self._name = name
+        self._uid = None
 
     def setUID(self, uid):
         '''Sets the user's UID
@@ -45,6 +46,7 @@ class User(object):
                 self._cache.delete(self._name) #invalidate cache
 
         self._uid = uid
+        self._name = None
 
     def getUID(self):
         '''Get the UID of the user
