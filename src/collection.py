@@ -42,7 +42,7 @@ class RunCollection(object):
         '''
 
         result = []
-        mEx = MagicException()
+        hException = HybridException()
 
         if self._items:
             for obj in self._items:
@@ -50,13 +50,13 @@ class RunCollection(object):
                     result.append(callback(obj, *args, **kargs))
                 except Exception as ex:
                     if postponeException:
-                        mEx.addException(ex)
+                        hException.addException(ex)
                     else:
                         raise ex
 
-            if mEx.hasExceptions():
-                mEx.addRetval(result)
-                raise mEx
+            if hException.hasExceptions():
+                hException.addRetval(result)
+                raise hException
 
             return result
 

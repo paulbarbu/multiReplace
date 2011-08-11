@@ -39,7 +39,7 @@ class EmptyCollectionError(Exception):
     def __str__(self):
         return 'Cannot {0} an empty collection!'.format(self._action)
 
-class MagicException(Exception):
+class HybridException(Exception):
     '''This exception is used in RunCollection, when postPoneException is True
     '''
 
