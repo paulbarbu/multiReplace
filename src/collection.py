@@ -18,11 +18,12 @@ class RunCollection(object):
 
         @throws EmptyCollectionError if this method is called on an empty
         collection
+        @throws HybridException
 
         @param callback a function object to be called on the objects
-        @param postponeException bool, if set to True exceptions will be raised
-        after the iteration, else the exceptions will be raised during the
-        iteration
+        @param postponeException bool, if set to True and the callback raised
+        exceptions a HybridException will be raised after the iteration,
+        else the exceptions will be raised during the iteration
         @param *args an argument list for passing to the callback function
         @param *kargs a keyed argument list to pass the the callback
 
