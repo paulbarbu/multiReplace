@@ -90,5 +90,18 @@ class HybridException(Exception):
 
         return self._retvals
 
+    def __str__(self):
+        '''
+        @return a block of text consisting of every exception's string
+        '''
+
+        exceptionText = '\n'
+
+        for ex in self._exceptions:
+            exceptionText += ex.__str__() + '\n'
+
+        return exceptionText
+
+
 
 
