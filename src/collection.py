@@ -1,7 +1,7 @@
 from functions import *
 from exception import *
 
-class Collection(object):
+class RunCollection(object):
     '''Collection class
 
     It holds a list of objects
@@ -42,21 +42,23 @@ class Collection(object):
         '''
 
         result = []
-        exceptions = []
+        mEx = MagicException()
 
         if self._items:
             for obj in self._items:
                 try:
                     result.append(callback(obj, *args, **kargs))
-                except Exception as detail:
+                except Exception as ex:
                     if postponeException:
-                        exceptions.append(detail)
+                        mEx.addException(ex)
                     else:
-                        raise detail
+                        raise ex
 
-            for e in exceptions:
-                raise e
+            if mEx.hasExceptions():
+                mEx.addRetval(result)
+                raise mEx
 
             return result
+
         else:
             raise EmptyCollectionError('map')
