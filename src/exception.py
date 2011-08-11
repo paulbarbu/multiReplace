@@ -9,7 +9,6 @@ class InexistentPathError(Exception):
     def __str__(self):
         return 'The path does not exist: {0}'.format(self._path)
 
-#TODO error code
 class NotSetError(Exception):
     '''Raised when the user's property is needed, but not set
     '''
@@ -39,3 +38,57 @@ class EmptyCollectionError(Exception):
 
     def __str__(self):
         return 'Cannot {0} an empty collection!'.format(self._action)
+
+class MagicException(Exception):
+    '''This exception is used in RunCollection, when postPoneException is True
+    '''
+
+    def __init__(self):
+        self._exceptions = []
+        self._retvals = []
+
+    def hasExceptions(self):
+        '''
+        @return bool True, if the self._exceptions list is not empty, else False
+        '''
+
+        if not self._exceptions:
+            return False
+
+        return True
+
+    def addException(self, ex):
+        '''Adds an exception to self._exceptions
+
+        @param ex an exception object
+
+        @return bool True if the exception was added, else False
+        '''
+
+        if isinstance(ex, Exception):
+            self._exceptions.append(ex)
+
+            return True
+
+        return False
+
+    def addRetval(self, retval):
+        '''Adds the retval to self._retvals
+
+        @param retval any value returned by a callback
+        '''
+
+        if type(retval) is list:
+            self._retvals.extend(retval)
+        else:
+            self._retvals.append(retval)
+
+    def getRetvals(self):
+        '''
+        @return self._retvals
+        '''
+
+        return self._retvals
+
+
+
