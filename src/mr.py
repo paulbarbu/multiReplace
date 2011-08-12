@@ -18,6 +18,12 @@ TODO: add examples
 '''
 
 #TODO if [lang] section does not exists then go to [default], then error
+#TODO: verbose: show INFOs and every file(see Collection)
+#TODO: at the end show how many replacements were made from how may files
+#TODO: is --path=... is a single file, then it will be a single item Collection
+#TODO: Readme.md for every branch
+#TODO: swap branches master <-> python, then 'python' becomes 'C'
+#TODO: ArgsParser, Collection::FileHandler::replace(tokens)
 
 import getopt
 import sys
