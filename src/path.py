@@ -271,3 +271,14 @@ class Path(object):
             return True
         else:
             return False
+
+    def getFilesByMime(self, mime = 'text', recursive = False):
+        '''Find files by a given MIME type in self._path
+
+        @param mime string representing the (or part of the) MIME to be matched
+        @param recursive bool, if it's set to True and self_.path is a directory
+        the matching will be done recursively,
+
+        @return a Collection object consisting of Path objects that match
+        '''
+        pass
