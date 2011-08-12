@@ -6,6 +6,7 @@ class RunCollection(object):
 
     It holds a list of objects
     '''
+    #TODO: self._verbose bool: True show current file name, else don't show
 
     def __init__(self, *objects):
         self._items = []
@@ -63,3 +64,9 @@ class RunCollection(object):
 
         else:
             raise EmptyCollectionError('map')
+
+    def countItems(self):
+        '''
+        @return the number of items stored in the collection
+        '''
+        return len(self._items)
