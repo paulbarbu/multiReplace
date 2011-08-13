@@ -14,6 +14,9 @@ class RunCollection(object):
         for obj in objects:
             self._items.append(obj)
 
+    def add(self, obj):
+        self._items.append(obj)
+
     def map(self, callback, postponeException = False, *args, **kargs):
         '''Call every callback on the objects in the collection
 
