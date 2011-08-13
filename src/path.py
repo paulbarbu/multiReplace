@@ -289,21 +289,28 @@ class Path(object):
 
         if self._exists:
             if os.path.isdir(self._path):
-                files = RunCollection()
+                fileCollection = RunCollection()
 
                 if recursive:
-                    pass #use os.walk
+                    for root, dirs, files in os.walk(self._path):
+                        for f in files:
+                            path = os.path.join(root, f)
+                            if os.path.isfile(path):
+                                f = File(Path(path, self._cache))
+                                if -1 != f.getMime().find(mime):
+                                    fileCollection.add(f)
+
                 else:
                     entries = os.listdir(self._path)
                     for entry in entries:
+
                         path = os.path.join(self._path, entry)
                         if os.path.isfile(path):
                             f = File(Path(path, self._cache))
                             if -1 != f.getMime().find(mime):
-                                dbg(path)
-                                files.add(f)
+                                fileCollection.add(f)
 
-                return files
+                return fileCollection
 
             else:
                 return False
