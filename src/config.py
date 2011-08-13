@@ -31,4 +31,5 @@ class Config(object):
         @return bool  True for success, else False
         '''
         pass
-    #TODO: a file is a Path with contents, maybe use inheritance Path -> File?
+
+    #TODO File(Path) -> IniConfigFile
