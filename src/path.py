@@ -6,6 +6,8 @@ from functions import * #TODO remove this
 from user import User
 from cache import Cache
 from exception import *
+from collection import RunCollection
+from file import File
 
 class Path(object):
     '''Blueprint for Path objects
@@ -275,10 +277,35 @@ class Path(object):
     def getFilesByMime(self, mime = 'text', recursive = False):
         '''Find files by a given MIME type in self._path
 
+        @throws InexistentPathError
+
         @param mime string representing the (or part of the) MIME to be matched
         @param recursive bool, if it's set to True and self_.path is a directory
         the matching will be done recursively,
 
-        @return a Collection object consisting of Path objects that match
+        @return a Collection object consisting of File objects that match or
+        False if self._path is not a directory
         '''
-        pass
+
+        if self._exists:
+            if os.path.isdir(self._path):
+                files = RunCollection()
+
+                if recursive:
+                    pass #use os.walk
+                else:
+                    entries = os.listdir(self._path)
+                    for entry in entries:
+                        path = os.path.join(self._path, entry)
+                        if os.path.isfile(path):#TODO check MIME using import magic
+                            dbg(path)
+                            f = File(Path(path, self._cache))
+                            files.add(f)
+
+                return files
+
+
+            else:
+                return False
+        else:
+            raise InexistentPathError(self._path)
