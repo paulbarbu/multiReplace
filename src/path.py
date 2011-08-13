@@ -297,13 +297,13 @@ class Path(object):
                     entries = os.listdir(self._path)
                     for entry in entries:
                         path = os.path.join(self._path, entry)
-                        if os.path.isfile(path):#TODO check MIME using import magic
-                            dbg(path)
+                        if os.path.isfile(path):
                             f = File(Path(path, self._cache))
-                            files.add(f)
+                            if -1 != f.getMime().find(mime):
+                                dbg(path)
+                                files.add(f)
 
                 return files
-
 
             else:
                 return False
