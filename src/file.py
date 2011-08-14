@@ -1,8 +1,10 @@
-import path
-import magic
 import os
-from exceptions import *
+
+import magic
+
+from exception import *
 from functions import *
+import path
 
 class File(object):
     '''Handle Path objects pointing at files
@@ -58,7 +60,7 @@ class File(object):
             if self._cache:
                 mime_type = self._cache.getItem(self._path.getPath())
 
-                if not mime_type: #cache misss
+                if not mime_type: #cache miss
                     mime = magic.Magic(mime=True)
                     mime_type = mime.from_file(self._path.getPath())
 
