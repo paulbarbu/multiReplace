@@ -126,8 +126,8 @@ def main(argv):
 
     if fileCollection:
         total_files = fileCollection.countItems()
+        fileCollection.map(File.replace, postponeException = False, tokens = tokens)
         #TODO get total_replacements
-        #TODO make the actual replacing
 
 
     ending(total_replacements, total_files)
