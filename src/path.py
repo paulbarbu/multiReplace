@@ -60,10 +60,10 @@ class Path(object):
         @return bool
         '''
 
-        self._exists = True
+        self._exists = False
 
-        if not os.path.exists(self._path):
-            self._exists = False;
+        if self._path and os.path.exists(self._path):
+            self._exists = True;
 
         return self._exists
 
