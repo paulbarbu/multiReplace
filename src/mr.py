@@ -29,9 +29,12 @@ import sys
 import logging
 import os
 
-import err
 from functions import *
+import err
 from path import Path
+from cache import Cache
+from collection import RunCollection
+from file import File
 
 def main(argv):
     section = ''
@@ -39,8 +42,15 @@ def main(argv):
 
     logLevel = logging.WARNING
 
-    path = Path()
-    config = Path()
+    total_files = 0
+    total_replacements = 0
+
+    logging.basicConfig(level=logLevel, format='%(levelname)s: %(message)s')
+
+    pathsCache = Cache()
+
+    path = Path(cache = pathsCache)
+    configPath = Path(cache = pathsCache)
 
     try:
         opts, args = getopt.getopt(argv, 'hrs:p:c:',
@@ -60,18 +70,51 @@ def main(argv):
                 section = arg
 
             elif opt in ('-p', '--path'):
-                path = setPath(arg)
+                path.setPath(arg)
+
             elif opt in ('-c', '--config'):
-                config = setPath(arg)
+                configPath.setPath(arg)
 
-    logging.basicConfig(level=logLevel,
-                        format='%(levelname)s: %(message)s')
+    if not section:
+        logging.error(err.err_msg.format(3, err.error[3]))
+        sys.exit(1)
 
-    if not path.getPath():
-        path.setPath(os.getcwd())
+    if not path.exists():
+        logging.error(err.err_msg.format(1, err.error[1].format('path',
+            path.getPath())))
+        sys.exit(1)
+
+    if not path.hasRights(True, True):
+        logging.error(err.err_msg.format(2, err.error[2].format(path.getPath(),
+            'read and write')))
+        sys.exit(1)
+
+    if not configPath.exists():
+        logging.error(err.err_msg.format(1, err.error[1].format('config path',
+            configPath.getPath())))
+        sys.exit(1)
+
+    if not configPath.hasRights():
+        logging.error(err.err_msg.format(2,
+            err.error[2].format(configPath.getPath(), 'read')))
+        sys.exit(1)
+
+    starting(section=section, path=path.getPath(), config=configPath.getPath(),
+            r = recursive)
+
+    if os.path.isdir(path.getPath()):
+        fileCollection = path.getFilesByMime('text', recursive)
+
+    else:
+        fileCollection = RunCollection(File(path))
+
+    if fileCollection:
+        total_files = fileCollection.countItems()
+        #TODO get total_replacements
+        #TODO make the actual replacing
 
 
-    starting(lang=lang, path=path.getPath(), config=config.getPath(), log=logLevel)
+    ending(total_replacements, total_files)
 
 if __name__ == '__main__':
     main(sys.argv[1:])
