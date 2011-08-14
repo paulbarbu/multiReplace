@@ -1,4 +1,7 @@
+# -*- coding: utf-8 -*-
 import os
+import tempfile
+import shutil
 
 import magic
 
@@ -81,4 +84,31 @@ class File(object):
 
         @return number of replacements made
         '''
-        pass
+
+        replacements = 0
+
+        temp_fh, temp_path = tempfile.mkstemp(suffix='mR')
+        temp_file = open(temp_path, 'w')
+
+        with open(self._path.getPath(), 'r') as f:
+            line = f.readline()
+
+            while '' != line:
+                for t in tokens:
+                    line = line.replace(t[0], t[1])
+
+                #TODO: edit distance
+
+                temp_file.write(line)
+
+                line = f.readline()
+
+        temp_file.close()
+        os.close(temp_fh)
+        os.remove(self._path.getPath())
+        shutil.move(temp_path, self._path.getPath())
+
+        return replacements
+
+
+
