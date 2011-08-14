@@ -1,9 +1,11 @@
 #! /usr/bin/env python2.7
+
 '''PyMultiReplace, replacement made easy
+
 This program is designed to replace multiple strings or characters
 in multiple files at a time
 
-Usage: ./mr.py [options] TODO inspect this
+Usage: ./mr.py [option]
 
 Options:
 -h, --help              display this help information
@@ -17,13 +19,8 @@ strings should be read
 TODO: add examples
 '''
 
-#TODO if [lang] section does not exists then go to [default], then error
-#TODO: verbose: show INFOs and every file(see Collection)
-#TODO: at the end show how many replacements were made from how may files
-#TODO: is --path=... is a single file, then it will be a single item Collection
 #TODO: Readme.md for every branch
 #TODO: swap branches master <-> python, then 'python' becomes 'C'
-#TODO: ArgsParser, Collection::FileHandler::replace(tokens)
 
 import getopt
 import sys
@@ -66,9 +63,6 @@ def main(argv):
     if not path.getPath():
         path.setPath(os.getcwd())
 
-    if not config.getPath():
-        pass
-        #TODO check for config files in cwd
 
     starting(lang=lang, path=path.getPath(), config=config.getPath(), log=logLevel)
 

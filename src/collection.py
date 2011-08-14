@@ -6,7 +6,6 @@ class RunCollection(object):
 
     It holds a list of objects
     '''
-    #TODO: self._verbose bool: True show current file name, else don't show
 
     def __init__(self, *objects):
         self._items = []
