@@ -28,13 +28,16 @@ import getopt
 import sys
 import logging
 import os
+import ConfigParser
 
 from functions import *
 import err
 from path import Path
 from cache import Cache
 from collection import RunCollection
+from iniconfig import IniConfig
 from file import File
+
 
 def main(argv):
     section = ''
@@ -97,6 +100,19 @@ def main(argv):
     if not configPath.hasRights():
         logging.error(err.err_msg.format(2,
             err.error[2].format(configPath.getPath(), 'read')))
+        sys.exit(1)
+
+    configFile = IniConfig(configPath)
+
+    try:
+        tokens = configFile.parse(section)
+    except ConfigParser.NoSectionError:
+        logging.error(err.err_msg.format(5, err.error[5].format(section)))
+        sys.exit(1)
+
+    if not tokens:
+        logging.error(err.err_msg.format(4,
+            err.error[4].format(section, configPath.getPath())))
         sys.exit(1)
 
     starting(section=section, path=path.getPath(), config=configPath.getPath(),
