@@ -9,14 +9,16 @@ Usage: ./mr.py [option]
 
 Options:
 -h, --help              display this help information
--v, --verbose           display detailed information
--l ..., --lang=...      the config section you want to use for replacement
--p ..., --path=...      the path to the dir or to the file the string should be
-replaced in
--c ..., --config=...    the path to the configuration file where the replacement
-strings should be read
+-s ..., --section=...      the config section you want to use for replacement
+-p ..., --path=...      the path to the dir or to the file the string should be replaced in
+-c ..., --config=...    the path to the configuration file where the replacement strings should be read
+-r, --recursive         is the path is a directory it will be walked recursively
 
-TODO: add examples
+Examples:
+./mr.py -s ro -p ~/subs -c ~/cfg.ini
+./mr.py -s ro -p ~/subs -c ~/cfg.ini -r
+./mr.py -s ro -p ~/file.srt -c ~/cfg.ini
+./mr.py --section ro --path ~/file.srt --config ~/cfg.ini
 '''
 
 #TODO: Readme.md for every branch
@@ -32,15 +34,17 @@ from functions import *
 from path import Path
 
 def main(argv):
-    lang = 'default'
+    section = ''
+    recursive = False
+
     logLevel = logging.WARNING
 
     path = Path()
     config = Path()
 
     try:
-        opts, args = getopt.getopt(argv, 'hvl:p:c:',
-                ['help', 'verbose', 'lang=', 'path=', 'config='])
+        opts, args = getopt.getopt(argv, 'hrs:p:c:',
+                ['help', 'recursive', 'section=', 'path=', 'config='])
     except getopt.GetoptError as detail:
         logging.error(detail)
     else:
@@ -48,10 +52,13 @@ def main(argv):
             if opt in ('-h', '--help'):
                 print __doc__
                 sys.exit(0)
-            elif opt in ('-v', '--verbose'):
-                logLevel = logging.INFO
-            elif opt in ('-l', '--lang'):
-                lang = arg
+
+            elif opt in ('-r', '--recursive'):
+                recursive = True
+
+            elif opt in ('-s', '--section'):
+                section = arg
+
             elif opt in ('-p', '--path'):
                 path = setPath(arg)
             elif opt in ('-c', '--config'):
