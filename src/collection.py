@@ -36,10 +36,10 @@ class RunCollection(object):
         col.map(Path.getPerm)
             -> this will call Path.getPerm() on every item in the collection col
 
-        col2.map(Path.make, True))
+        col2.map(Path.make, True)
             -> this will call Path.make(True) on every item in the collection col2
 
-        col.map(path.Path.make, postponeException = True, overwrite = True))
+        col.map(Path.make, postponeException = True, overwrite = True)
             -> this will call map(postponeException = True) and
             Path.make(overwrite = True), so if you want to postpone exceptions
             you'll have to use only keyword arguments
