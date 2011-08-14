@@ -77,7 +77,7 @@ class File(object):
     def replace(self, tokens):
         '''Use the tokens and make replacements in the file
 
-        @param tokens a dictionary containing pairs (target, replacement) strings
+        @param tokens a dictionary containing tuples (target, replacement)
 
         @return number of replacements made
         '''
