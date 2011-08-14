@@ -11,4 +11,3 @@ def starting(section, path, config, r):
 
 def ending(n_replacements, n_files):
     print 'Made {0} replacements in {1} files!'.format(n_replacements, n_files)
-
