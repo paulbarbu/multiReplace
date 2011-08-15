@@ -6,30 +6,25 @@ find & replace strings in multiple files at a time.
 
 The strings and their replacement are stored in \*.ini files(config files) as pairs.
 
-Defaults
-========
-
-Default path: `./files`
-
-Default configuration file: `./config/default.ini`
-
-Default language: first to be found in the configuration file
-
 Configs
 =======
 
 No standard config is supplied!
 Please create your own, suitable for your needs.
 
+__ATTENTION__:
+If replacing special characters the config file's encoding must be the same as
+the file's in which the replacements are made, else the matching will fail.
+
 Basic usage
 ===========
 
-`./mr -p path/to/directory_or_file -c path/to/config/default.ini -l section`
+`./mr -p path/to/directory_or_file -c path/to/config/default.ini -s section`
 
-Compilation
+Dependencies
 ============
-
-Just use `make` in multiReplace's root directory
+* File.getMime depends on [Python-magic](https://github.com/ahupp/python-magic 'Python-magic')
+* File.getEncoding depends on [chardet](http://chardet.feedparser.org/ 'chardet')
 
 History
 =======
