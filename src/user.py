@@ -1,4 +1,7 @@
-import pwd
+import sys
+
+if sys.platform.startswith('linux'):
+    import pwd
 
 from exception import *
 
@@ -55,28 +58,32 @@ class User(object):
         is set
         @throws KeyError when the user is not found
 
-        Populate _uid and return it
+        @return self._uid after it's populated, if the system is not a linux returns
+        False
         '''
 
-        if self._name:
-            if self._cache:
-                pwnam = self._cache.getItem(self._name)
+        if sys.platform.startswith('linux'):
+            if self._name:
+                if self._cache:
+                    pwnam = self._cache.getItem(self._name)
 
-                if not pwnam:
-                    pwnam = pwd.getpwnam(self._name)
-                    self._cache.add(self._name, pwnam)
+                    if not pwnam:
+                        pwnam = pwd.getpwnam(self._name)
+                        self._cache.add(self._name, pwnam)
 
-                self._uid = pwnam[2]
+                    self._uid = pwnam[2]
 
+                else:
+                    try:
+                        self._uid = pwd.getpwnam(self._name)[2]
+                    except KeyError as detail:
+                        raise detail
+
+                return self._uid
             else:
-                try:
-                    self._uid = pwd.getpwnam(self._name)[2]
-                except KeyError as detail:
-                    raise detail
-
-            return self._uid
+                raise NotSetError('name')
         else:
-            raise NotSetError('name')
+            return False
 
     def getName(self):
         '''Get the user's name
@@ -84,24 +91,29 @@ class User(object):
         @throws NotSetError if trying to use this method before the UID is set
         @throws KeyError when the UID is not found
 
-        Populate _name and return it
+        @return self._name after it's populated, if the platform is not linux
+        return False
         '''
-        if self._uid:
-            if self._cache:
-                pwuid = self._cache.getItem(self._uid)
 
-                if not pwuid:
-                    pwuid = pwd.getpwuid(self._uid)
-                    self._cache.add(self._uid, pwuid)
+        if sys.platform.startswith('linux'):
+            if self._uid:
+                if self._cache:
+                    pwuid = self._cache.getItem(self._uid)
 
-                self._name = pwuid[0]
+                    if not pwuid:
+                        pwuid = pwd.getpwuid(self._uid)
+                        self._cache.add(self._uid, pwuid)
 
+                    self._name = pwuid[0]
+
+                else:
+                    try:
+                        self._name = pwd.getpwuid(self._uid)[0]
+                    except KeyError as detail:
+                            raise detail
+
+                return self._name
             else:
-                try:
-                    self._name = pwd.getpwuid(self._uid)[0]
-                except KeyError as detail:
-                        raise detail
-
-            return self._name
+                raise NotSetError('UID')
         else:
-            raise NotSetError('UID')
+            return False

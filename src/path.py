@@ -1,6 +1,9 @@
+import sys
 import stat
 import os
-import grp
+
+if sys.platform.startswith('linux'):
+    import grp
 
 from user import User
 from cache import Cache
@@ -183,26 +186,29 @@ class Path(object):
         @throws InexistentPathError if the path doesn't exist
 
         It populates _group and _gid
-        @return [_gid, _group]
+        @return [_gid, _group] or False if cannot import grp module
         '''
 
-        if self._exists:
-            if self._cache:
-                path_stat = self._cache.getItem(self._path)
+        if sys.platform.startswith('linux'):
+            if self._exists:
+                if self._cache:
+                    path_stat = self._cache.getItem(self._path)
 
-                if not path_stat:
+                    if not path_stat:
+                        path_stat = os.stat(self._path)
+                        self._cache.add(self._path, path_stat) #validate cache
+                else:
                     path_stat = os.stat(self._path)
-                    self._cache.add(self._path, path_stat) #validate cache
+
+                self._gid = path_stat[stat.ST_GID]
+
+                self._group = grp.getgrgid(self._gid)[0]
+
+                return [self._gid, self._group]
             else:
-                path_stat = os.stat(self._path)
-
-            self._gid = path_stat[stat.ST_GID]
-
-            self._group = grp.getgrgid(self._gid)[0]
-
-            return [self._gid, self._group]
+                raise InexistentPathError(self._path)
         else:
-            raise InexistentPathError(self._path)
+            return False
 
     def make(self, overwrite = False, parentMustExist = False):
         '''Create a file or dir at the location pointed by path
