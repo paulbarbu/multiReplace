@@ -1,10 +1,12 @@
 multiReplace
-=======
+============
 
 This is an extensible, cross-platform, command line tool written in Python for fast
 find & replace strings in multiple files at a time.
 
 The strings and their replacement are stored in \*.ini files(config files) as pairs.
+
+For the C version of this program checkout branch C.
 
 Configs
 =======
