@@ -123,11 +123,9 @@ def main(argv):
 
     if fileCollection:
         total_files = fileCollection.countItems()
-        fileCollection.map(File.replace, postponeException = False, tokens = tokens)
-        #TODO get total_replacements
+        total_replacements = fileCollection.map(File.replace, postponeException = False, tokens = tokens)
 
-
-    ending(total_replacements, total_files)
+    ending(total_replacements[0], total_files)
 
 if __name__ == '__main__':
     main(sys.argv[1:])
