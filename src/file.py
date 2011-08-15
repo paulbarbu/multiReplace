@@ -6,6 +6,7 @@ import magic
 import chardet
 
 from exception import *
+from functions import *
 import path
 
 class File(object):
@@ -113,13 +114,15 @@ class File(object):
             enc = self.getEncoding()
 
             with open(self._path.getPath(), 'r') as f:
+                prev_line = ''
                 line = unicode(f.readline(), enc).encode('utf-8')
 
                 while '' != line:
+                    prev_line = line
                     for t in tokens:
                         line = line.replace(t[0], t[1])
 
-                    #TODO: edit distance
+                    replacements += lev(prev_line, line)
 
                     temp_file.write(line)
 
