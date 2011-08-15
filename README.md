@@ -27,7 +27,16 @@ the file's in which the replacements are made, else the matching will fail.
 Basic usage
 ===========
 
+Everything is done from a command line.
+
+Download the _executables_ archive, create a new config file and, depending on your OS:
+
 `./mr -p path/to/directory_or_file -c path/to/config/default.ini -s section`
+`mr.exe -p path/to/directory_or_file -c path/to/config/default.ini -s section`
+
+Or just clone the repo and:
+
+`./mr.py -p path/to/directory_or_file -c path/to/config/default.ini -s section`
 
 Options
 =======
