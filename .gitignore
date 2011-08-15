@@ -1,0 +1,9 @@
+*.i
+*.s
+*.o
+*.out
+*.exe
+*.swp
+*~
+*.pyc
+/src/mr
