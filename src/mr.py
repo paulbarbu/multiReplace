@@ -21,22 +21,19 @@ Examples:
 ./mr.py --section ro --path ~/file.srt --config ~/cfg.ini
 '''
 
-#TODO: Readme.md for every branch
-#TODO: swap branches master <-> python, then 'python' becomes 'C'
-
 import getopt
 import sys
 import logging
 import os
 import ConfigParser
 
-from functions import *
 import err
 from path import Path
 from cache import Cache
 from collection import RunCollection
 from iniconfig import IniConfig
 from file import File
+from functions import *
 
 
 def main(argv):

@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 import os
 import tempfile
 import shutil
@@ -7,7 +6,6 @@ import magic
 import chardet
 
 from exception import *
-from functions import *
 import path
 
 class File(object):
@@ -137,4 +135,3 @@ class File(object):
             raise InexistentPathError(self._path)
 
         #TODO: check path rights in File::replace, File::getEncoding and File::getMime
-        #TODO: get the encoding dinamically from the config and from the path

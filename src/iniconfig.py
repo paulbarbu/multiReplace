@@ -4,7 +4,6 @@ import os
 import file
 import path
 from exception import *
-from functions import *
 
 class IniConfig(file.File):
     '''Parse configuration files

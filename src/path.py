@@ -2,7 +2,6 @@ import stat
 import os
 import grp
 
-from functions import * #TODO remove this
 from user import User
 from cache import Cache
 from exception import *
@@ -186,8 +185,6 @@ class Path(object):
         It populates _group and _gid
         @return [_gid, _group]
         '''
-
-        #TODO: Group class
 
         if self._exists:
             if self._cache:

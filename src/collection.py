@@ -1,4 +1,3 @@
-from functions import *
 from exception import *
 
 class RunCollection(object):
