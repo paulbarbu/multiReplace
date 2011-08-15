@@ -14,6 +14,12 @@ Configs
 No standard config is supplied!
 Please create your own, suitable for your needs.
 
+## Example:
+    [section1]
+    foo=bar
+    [sectionName]
+    find=replace
+
 __ATTENTION__:
 If replacing special characters the config file's encoding must be the same as
 the file's in which the replacements are made, else the matching will fail.
