@@ -33,8 +33,10 @@ class IniConfig(file.File):
         @param section string representing the section of the config to be
         parsed
 
-        @return a dictionary of tuples, form: (key, value) contained in the
+        @return a list of tuples, form: (key, value) contained in the
         section or False if trying to parse anything else but a text file
+
+        The key and value strings returned are utf-8 encoded
         '''
 
         if self._path and self._path.exists():
@@ -43,9 +45,17 @@ class IniConfig(file.File):
                 self._cfg.read(self._path.getPath())
 
                 try:
-                    return self._cfg.items(section)
+                    tokens = self._cfg.items(section)
                 except ConfigParser.Error as detail:
                     raise detail
+
+                cfgEncoding = super(self.__class__, self).getEncoding()
+                result = []
+                for t in tokens:
+                    result.append((unicode(t[0], cfgEncoding).encode('utf-8'),
+                                   unicode(t[1], cfgEncoding).encode('utf-8')))
+
+                return result
             else:
                 return False
         else:
