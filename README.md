@@ -24,19 +24,19 @@ Basic usage
 Options
 =======
 
--h, --help              display this help information
--s ..., --section=...   the config section you want to use for replacement
--p ..., --path=...      the path to the dir or to the file the string should be replaced in
--c ..., --config=...    the path to the configuration file where the replacement strings should be read
--r, --recursive         is the path is a directory it will be walked recursively
+    -h, --help              display this help information  
+    -s ..., --section=...   the config section you want to use for replacement  
+    -p ..., --path=...      the path to the dir or to the file the string should be replaced in  
+    -c ..., --config=...    the path to the configuration file where the replacement strings should be read  
+    -r, --recursive         is the path is a directory it will be walked recursively  
 
 ## Examples:
-``
-./mr.py -s ro -p ~/subs -c ~/cfg.ini
-./mr.py -s ro -p ~/subs -c ~/cfg.ini -r
-./mr.py -s ro -p ~/file.srt -c ~/cfg.ini
-./mr.py --section ro --path ~/file.srt --config ~/cfg.ini
-``
+`
+./mr.py -s ro -p ~/subs -c ~/cfg.ini  
+./mr.py -s ro -p ~/subs -c ~/cfg.ini -r  
+./mr.py -s ro -p ~/file.srt -c ~/cfg.ini  
+./mr.py --section ro --path ~/file.srt --config ~/cfg.ini  
+`
 
 Dependencies
 ============
