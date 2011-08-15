@@ -6,6 +6,9 @@ find & replace strings in multiple files at a time.
 
 The strings and their replacement are stored in \*.ini files as pairs.
 
+__Note:__ This version is a bit outdated, I recommend you to use the Python
+version!
+
 Defaults
 ========
 
@@ -41,7 +44,7 @@ generally to replace strings in files.
 License
 =======
 
-(C) Copyright 2011 PauLLiK
+(C) Copyright 2011 Paul Barbu
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
