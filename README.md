@@ -32,10 +32,13 @@ Options
 
 ## Examples:
 `
-./mr.py -s ro -p ~/subs -c ~/cfg.ini  
-./mr.py -s ro -p ~/subs -c ~/cfg.ini -r  
-./mr.py -s ro -p ~/file.srt -c ~/cfg.ini  
-./mr.py --section ro --path ~/file.srt --config ~/cfg.ini  
+./mr.py -s ro -p ~/subs -c ~/cfg.ini
+
+./mr.py -s ro -p ~/subs -c ~/cfg.ini -r
+
+./mr.py -s ro -p ~/file.srt -c ~/cfg.ini
+
+./mr.py --section ro --path ~/file.srt --config ~/cfg.ini
 `
 
 Dependencies
