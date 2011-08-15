@@ -1,8 +1,0 @@
-*.i
-*.s
-*.o
-*.out
-*.exe
-*.swp
-*~
-/src/mr
