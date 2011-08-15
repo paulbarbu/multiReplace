@@ -4,6 +4,7 @@ import tempfile
 import shutil
 
 import magic
+import chardet
 
 from exception import *
 from functions import *
@@ -77,38 +78,63 @@ class File(object):
         else:
             raise InexistentPathError(self._path)
 
+    def getEncoding(self):
+        '''Determine the file's encoding
+
+        @throws InexistentPathError
+
+        @return string representing the encoding
+
+        This method depends on chardet: http://chardet.feedparser.org/
+        '''
+
+        if self._path and self._path.exists():
+            data = open(self._path.getPath()).read()
+
+            return chardet.detect(data)['encoding']
+
+        else:
+            raise InexistentPathError(self._path)
+
     def replace(self, tokens):
         '''Use the tokens and make replacements in the file
+
+        @throws InexistentPathError
 
         @param tokens a dictionary containing tuples (target, replacement)
 
         @return number of replacements made
         '''
 
-        replacements = 0
+        if self._path and self._path.exists():
+            replacements = 0
 
-        temp_fh, temp_path = tempfile.mkstemp(suffix='mR')
-        temp_file = open(temp_path, 'w')
+            temp_fh, temp_path = tempfile.mkstemp(suffix='mR')
+            temp_file = open(temp_path, 'w')
 
-        with open(self._path.getPath(), 'r') as f:
-            line = f.readline()
+            enc = self.getEncoding()
 
-            while '' != line:
-                for t in tokens:
-                    line = line.replace(t[0], t[1])
+            with open(self._path.getPath(), 'r') as f:
+                line = unicode(f.readline(), enc).encode('utf-8')
 
-                #TODO: edit distance
+                while '' != line:
+                    for t in tokens:
+                        line = line.replace(t[0], t[1])
 
-                temp_file.write(line)
+                    #TODO: edit distance
 
-                line = f.readline()
+                    temp_file.write(line)
 
-        temp_file.close()
-        os.close(temp_fh)
-        os.remove(self._path.getPath())
-        shutil.move(temp_path, self._path.getPath())
+                    line = unicode(f.readline(), enc).encode('utf-8')
 
-        return replacements
+            temp_file.close()
+            os.close(temp_fh)
+            os.remove(self._path.getPath())
+            shutil.move(temp_path, self._path.getPath())
 
+            return replacements
+        else:
+            raise InexistentPathError(self._path)
 
-
+        #TODO: check path rights in File::replace, File::getEncoding and File::getMime
+        #TODO: get the encoding dinamically from the config and from the path
