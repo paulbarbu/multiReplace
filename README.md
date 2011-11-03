@@ -58,8 +58,8 @@ Options
 
 Dependencies
 ============
-* File.getMime depends on [Python-magic](https://github.com/ahupp/python-magic 'Python-magic')
-* File.getEncoding depends on [chardet](http://chardet.feedparser.org/ 'chardet')
+* File.getMime() depends on [Python-magic](https://github.com/ahupp/python-magic 'Python-magic')
+* File.getEncoding() depends on [chardet](http://chardet.feedparser.org/ 'chardet')
 
 History
 =======
