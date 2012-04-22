@@ -8,7 +8,8 @@ multiReplacer: $(OBJS)
 	$(CC) -o mr $(OBJS) $(CFLAGS)
 
 debug: $(OBJS)
-	$(CC) -g $(OBJS:.o=.c) $(CFLAGS)
+	$(CC) -o mr -g $(OBJS:.o=.c) $(CFLAGS)
+	valgrind --track-fds=yes --log-file=vgrind.dbg --tool=memcheck --leak-check=yes --show-reachable=yes ./mr
 
 %.o: src/%.c
 	$(CC) -c $*.c $(CFLAGS)
