@@ -117,7 +117,7 @@ char** get_char_sets(FILE *source){
 
                 for(int i=n-2;i<=n;i++){
                     if(0 == i%2){
-                        sets[i] = realloc(sets[i], equal_pos * sizeof(char));
+                        sets[i] = realloc(sets[i], equal_pos+1 * sizeof(char));
                     }
                     else{
                         sets[i] = realloc(sets[i], (strlen(line) - equal_pos)
