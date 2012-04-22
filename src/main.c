@@ -44,11 +44,23 @@ int main(int argc, char *argv[]){
             argNum++;
             if(argNum >= argc){
                 printf("Not enough options!\n");
+
+                free(file_stats);
+                free(path);
+                free(config);
+                free(lang);
+
                 exit(ERR_ARG);
             }
 
             if(argv[argNum][0] == '-'){
                 printf("Path not specified!\n");
+
+                free(file_stats);
+                free(path);
+                free(config);
+                free(lang);
+
                 exit(ERR_ARG);
             }
             else{
@@ -67,11 +79,23 @@ int main(int argc, char *argv[]){
             argNum++;
             if(argNum >= argc){
                 printf("Not enough options!\n");
+
+                free(file_stats);
+                free(path);
+                free(config);
+                free(lang);
+
                 exit(ERR_ARG);
             }
 
             if(argv[argNum][0] == '-'){
                 printf("Configuration path not specified!\n");
+
+                free(file_stats);
+                free(path);
+                free(config);
+                free(lang);
+
                 exit(ERR_ARG);
             }
             else{
@@ -86,11 +110,23 @@ int main(int argc, char *argv[]){
             argNum++;
             if(argNum >= argc){
                 printf("Not enough options!\n");
+
+                free(file_stats);
+                free(path);
+                free(config);
+                free(lang);
+
                 exit(ERR_ARG);
             }
 
             if('-' == argv[argNum][0]){
                 printf("Language not specified!\n");
+
+                free(file_stats);
+                free(path);
+                free(config);
+                free(lang);
+
                 exit(ERR_ARG);
             }
             else{
@@ -103,6 +139,12 @@ int main(int argc, char *argv[]){
         }
         else{
             printf("Unknown argument: %s\n", argv[argNum]);
+
+            free(file_stats);
+            free(path);
+            free(config);
+            free(lang);
+
             exit(ERR_ARG);
         }
         argNum++;
@@ -126,15 +168,24 @@ int main(int argc, char *argv[]){
                 fgets(comment, 82, config_file);
             }
             fseek(config_file, -1 * strlen(comment), SEEK_SET);
+
+            free(comment);
         }
 
         sets = get_char_sets(config_file);
+
+        fclose(config_file);
     }
     else{
         printf("Invalid configuration file: %s\n", config);
+
+        free(file_stats);
+        free(path);
+        free(config);
+        free(lang);
+
         exit(ERR_CFG_FILE);
     }
-
 
     /**
      * Check if the path is a directory, a file or none
@@ -143,12 +194,10 @@ int main(int argc, char *argv[]){
     path_dir = opendir(path);
 
     if(NULL != path_dir){
-        file_stats = parse_dir(sets, path_dir, path);
+        file_stats = (long int*) parse_dir(sets, path_dir, path);
+        closedir(path_dir);
     }
     else{
-        closedir(path_dir);
-        free(path_dir);
-
         file_stats = malloc(2 * sizeof(long int));
         file_stats[0] = 0;
         file_stats[1] = 0;
@@ -158,24 +207,42 @@ int main(int argc, char *argv[]){
         if(NULL != path_file){
             file_stats[0]++;
             file_stats[1] = replace_in_file(sets, path_file, path, "w");
+
+            fclose(path_file);
         }
         else{
             printf("Invalid path: %s\n", path);
+
+            free(file_stats);
+            free(path_dir);
+            free(path);
+            free(config);
+            free(lang);
+            free(sets);
+
             exit(ERR_PATH);
         }
     }
+
     printf("Path: %s\n", path);
     printf("Config: %s\n", config);
+
     if(-1 != position){
         printf("Lang(section): %s\n", lang);
     }
     else{
         printf("Lang(section): First section from config\n");
     }
+
     printf("Total files processed: %ld\n", file_stats[0]);
     printf("Total replacements: %ld\n", file_stats[1]);
 
     free(file_stats);
+    free(path_dir);
+    free(path);
+    free(config);
+    free(lang);
+    free(sets);
 
     exit(OK);
 }

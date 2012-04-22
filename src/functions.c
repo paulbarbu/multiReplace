@@ -66,6 +66,8 @@ long int lang_search(const char *needle, FILE *haystack){
         pos = -1;
     }
 
+    free(line);
+
     return pos;
 }
 
@@ -96,7 +98,8 @@ char** get_char_sets(FILE *source){
 
     char *line = malloc(256 * sizeof(char)),
         **sets = malloc((n + 1) * sizeof(char*)),
-        *equal = malloc(sizeof(char));
+        *equal;
+
 
     for(int i=0;i<=n;i++){
         sets[i] = malloc(1 * sizeof(char));
@@ -128,12 +131,14 @@ char** get_char_sets(FILE *source){
                 for(int i=0;i<equal_pos;i++){
                     sets[n-2][i] = line[i];
                 }
+
                 sets[n-2][equal_pos] = '\0';
 
                 k=0;
                 for(int i=equal_pos + 1;i<strlen(line)-1;i++){
                     sets[n-1][k++] = line[i];
                 }
+
                 sets[n-1][strlen(line) - equal_pos - 2] = '\0';
 
                 n+=2;
@@ -145,6 +150,8 @@ char** get_char_sets(FILE *source){
         }
 
     }while(!feof(source));
+
+    free(line);
 
     return sets;
 }
@@ -288,7 +295,7 @@ long int* parse_dir(const char** sets, DIR *dir, char *path){
             }
         }
     }
+
     closedir(dir);
     return info;
 }
-
