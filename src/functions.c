@@ -243,8 +243,8 @@ long int replace_in_file(const char **sets, FILE *file, const char *path,
  * Tries to open every file in the *dir directory and its subdirectories to edit
  * it
  *
- * Returns a bidimensional array of long ints, first if the number of files
- * edited and the second one is number of replacements made
+ * Returns a bidimensional array of long ints, first is the number of files
+ * edited and the second one is the number of replacements made
  */
 long int* parse_dir(const char** sets, DIR *dir, char *path){
     long int *info = malloc(2 * sizeof(long int));
