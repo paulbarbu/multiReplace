@@ -44,7 +44,7 @@ generally to replace strings in files.
 License
 =======
 
-(C) Copyright 2011 Paul Barbu
+(C) Copyright 2011 Barbu Paul - Gheorghe
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
