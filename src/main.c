@@ -218,6 +218,12 @@ int main(int argc, char *argv[]){
             free(path);
             free(config);
             free(lang);
+
+            int i = 0;
+            while(sets[i]){
+                free(sets[i]);
+                i++;
+            }
             free(sets);
 
             exit(ERR_PATH);
@@ -242,6 +248,12 @@ int main(int argc, char *argv[]){
     free(path);
     free(config);
     free(lang);
+
+    int i = 0;
+    while(sets[i]){
+        free(sets[i]);
+        i++;
+    }
     free(sets);
 
     exit(OK);
