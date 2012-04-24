@@ -45,7 +45,6 @@ int main(int argc, char *argv[]){
             if(argNum >= argc){
                 printf("Not enough options!\n");
 
-                free(file_stats);
                 free(path);
                 free(config);
                 free(lang);
@@ -56,7 +55,6 @@ int main(int argc, char *argv[]){
             if(argv[argNum][0] == '-'){
                 printf("Path not specified!\n");
 
-                free(file_stats);
                 free(path);
                 free(config);
                 free(lang);
@@ -80,7 +78,6 @@ int main(int argc, char *argv[]){
             if(argNum >= argc){
                 printf("Not enough options!\n");
 
-                free(file_stats);
                 free(path);
                 free(config);
                 free(lang);
@@ -91,7 +88,6 @@ int main(int argc, char *argv[]){
             if(argv[argNum][0] == '-'){
                 printf("Configuration path not specified!\n");
 
-                free(file_stats);
                 free(path);
                 free(config);
                 free(lang);
@@ -111,7 +107,6 @@ int main(int argc, char *argv[]){
             if(argNum >= argc){
                 printf("Not enough options!\n");
 
-                free(file_stats);
                 free(path);
                 free(config);
                 free(lang);
@@ -122,7 +117,6 @@ int main(int argc, char *argv[]){
             if('-' == argv[argNum][0]){
                 printf("Language not specified!\n");
 
-                free(file_stats);
                 free(path);
                 free(config);
                 free(lang);
@@ -140,7 +134,6 @@ int main(int argc, char *argv[]){
         else{
             printf("Unknown argument: %s\n", argv[argNum]);
 
-            free(file_stats);
             free(path);
             free(config);
             free(lang);
