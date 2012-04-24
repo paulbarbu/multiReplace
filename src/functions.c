@@ -123,7 +123,7 @@ char** get_char_sets(FILE *source){
                         sets[i] = realloc(sets[i], equal_pos+1 * sizeof(char));
                     }
                     else{
-                        sets[i] = realloc(sets[i], (strlen(line) - equal_pos)
+                        sets[i] = realloc(sets[i], (strlen(line) - equal_pos-1)
                                                     * sizeof(char));
                     }
                 }
@@ -228,7 +228,7 @@ long int replace_in_file(const char **sets, FILE *file, const char *path,
                 i+=2; //next char set
         }while(NULL != sets[i] && '\0' != sets[i][0]);
 
-        freopen(path, "w" ,file);
+        freopen(path, "w", file);
         fwrite(buffer, 1, size, file);
 
         free(buffer);
