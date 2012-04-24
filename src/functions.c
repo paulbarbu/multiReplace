@@ -92,18 +92,13 @@ long int lang_search(const char *needle, FILE *haystack){
  * Returns an array of pointers to strings(multi-dimensional array of strings)
  */
 char** get_char_sets(FILE *source){
-    int n = 2,
+    int n = 0,
         k = 0,
         equal_pos = 0;
 
     char *line = malloc(256 * sizeof(char)),
-        **sets = malloc((n + 1) * sizeof(char*)),
+        **sets,
         *equal;
-
-
-    for(int i=0;i<=n;i++){
-        sets[i] = malloc(1 * sizeof(char));
-    }
 
     do{
         fgets(line, 256, source);
@@ -118,12 +113,20 @@ char** get_char_sets(FILE *source){
                     continue;
                 }
 
-                for(int i=n-2;i<=n;i++){
+                n += 2;
+                if(n == 2){
+                    sets = malloc((n+1) * sizeof(char*));
+                }
+                else{
+                    sets = realloc(sets, (n+1) * sizeof(char*));
+                }
+
+                for(int i=n-2;i<n;i++){
                     if(0 == i%2){
-                        sets[i] = realloc(sets[i], equal_pos+1 * sizeof(char));
+                        sets[i] = malloc(equal_pos+1 * sizeof(char));
                     }
                     else{
-                        sets[i] = realloc(sets[i], (strlen(line) - equal_pos-1)
+                        sets[i] = malloc((strlen(line) - equal_pos-1)
                                                     * sizeof(char));
                     }
                 }
@@ -141,8 +144,6 @@ char** get_char_sets(FILE *source){
 
                 sets[n-1][strlen(line) - equal_pos - 2] = '\0';
 
-                n+=2;
-                sets = realloc(sets, (n + 1) * sizeof(char*));
             }
         }
         else{
@@ -152,6 +153,7 @@ char** get_char_sets(FILE *source){
     }while(!feof(source));
 
     free(line);
+    sets[n] = NULL;
 
     return sets;
 }
