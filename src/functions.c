@@ -99,8 +99,10 @@ char** get_char_sets(FILE *source){
         equal_pos = 0;
 
     char *line = malloc(256 * sizeof(char)),
-        **sets,
+        **sets = NULL,
         *equal;
+
+    line[0] = '\0';
 
     do{
         fgets(line, 256, source);

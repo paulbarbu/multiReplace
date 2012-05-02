@@ -21,7 +21,7 @@ int main(int argc, char *argv[]){
     char *path = malloc((strlen(DEF_PATH)+1) * sizeof(char)),
          *config = malloc((strlen(DEF_CONFIG)+1) * sizeof(char)),
          *lang = malloc((strlen(DEF_LANG)+1) * sizeof(char)),
-         **sets;
+         **sets = NULL;
 
     FILE *config_file = NULL,
         *path_file;
@@ -168,11 +168,20 @@ int main(int argc, char *argv[]){
         sets = get_char_sets(config_file);
 
         fclose(config_file);
+
+        if(NULL == sets){
+            printf("Invalid configuration file: %s\n", config);
+
+            free(path);
+            free(config);
+            free(lang);
+
+            exit(ERR_CFG_FILE);
+        }
     }
     else{
         printf("Invalid configuration file: %s\n", config);
 
-        free(file_stats);
         free(path);
         free(config);
         free(lang);
