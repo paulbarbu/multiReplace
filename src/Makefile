@@ -17,12 +17,14 @@ debug: $(OBJS)
 	#$(VV) $(VFLAGS) -p -
 	#$(VV) $(VFLAGS) -p-
 	#$(VV) $(VFLAGS) -p test
+	#$(VV) $(VFLAGS) -p ./test #check that overlapping
 	#$(VV) $(VFLAGS) -c
 	#$(VV) $(VFLAGS) -c -
 	#$(VV) $(VFLAGS) -c ./config/default.ini
 	#$(VV) $(VFLAGS) -c config/default.ini
-	#$(VV) $(VFLAGS) -c test #check the segfault
-	#$(VV) $(VFLAGS) -p ./test #check that overlapping
+	#$(VV) $(VFLAGS) -c test
+	#$(VV) $(VFLAGS) -c ./test
+	#test the -l part
 
 %.o: src/%.c
 	$(CC) -c $*.c $(CFLAGS)
