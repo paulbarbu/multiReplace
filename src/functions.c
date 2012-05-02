@@ -9,6 +9,8 @@
 #include <string.h>
 #include <dirent.h>
 
+#include "./includes/functions.h"
+
 /**
  * long int empty_file(FILE *file)
  *
@@ -32,12 +34,12 @@ long int file_size(FILE *file){
 }
 
 /**
- * long int lang_search(const char *needle, FILE *haystack)
+ * long int lang_search(char *needle, FILE *haystack)
  *
  * Search for string needle in file haystack
  * If needle is found return starting position, else return NULL
  */
-long int lang_search(const char *needle, FILE *haystack){
+long int lang_search(char *needle, FILE *haystack){
     long int size, pos;
     char *line = malloc(256 * sizeof(char));
 
@@ -144,31 +146,28 @@ char** get_char_sets(FILE *source){
 
                 sets[n-1][strlen(line) - equal_pos - 2] = '\0';
 
+                sets[n] = NULL;
             }
         }
         else{
             break;
         }
-
     }while(!feof(source));
 
     free(line);
-    sets[n] = NULL;
 
     return sets;
 }
 
 /**
- * long int replace_in_file(const char **sets, FILE *file, const char *path,
- *                          const char *mode){
+ * long int replace_in_file(char **sets, FILE *file, char *path, const char *mode){
  *
  * Search for sets[even_number] in file stream *file and replace with
  * sets[uneven_number]
  *
  * Returns a long int representing number of replacements made
  */
-long int replace_in_file(const char **sets, FILE *file, const char *path,
-                            const char *mode){
+long int replace_in_file(char **sets, FILE *file, char *path, const char *mode){
     long int n = 0, size = 0, len, remaining_len;
 
     char *buffer,
@@ -240,7 +239,7 @@ long int replace_in_file(const char **sets, FILE *file, const char *path,
 }
 
 /**
- * long int** parse_dir(const char** sets, DIR *dir)
+ * long int** parse_dir(char** sets, DIR *dir, char *path)
  *
  * Tries to open every file in the *dir directory and its subdirectories to edit
  * it
@@ -248,7 +247,7 @@ long int replace_in_file(const char **sets, FILE *file, const char *path,
  * Returns a bidimensional array of long ints, first is the number of files
  * edited and the second one is the number of replacements made
  */
-long int* parse_dir(const char** sets, DIR *dir, char *path){
+long int* parse_dir(char** sets, DIR *dir, char *path){
     long int *info = malloc(2 * sizeof(long int));
 
     char *name = malloc(strlen(path) * sizeof(char) +1),
