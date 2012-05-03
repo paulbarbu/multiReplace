@@ -17,7 +17,7 @@ debug: $(OBJS)
 	#$(VV) $(VFLAGS) -p -
 	#$(VV) $(VFLAGS) -p-
 	#$(VV) $(VFLAGS) -p test
-	#$(VV) $(VFLAGS) -p ./test #check that overlapping
+	#$(VV) $(VFLAGS) -p ./test #check that overlapping TODO
 	#$(VV) $(VFLAGS) -c
 	#$(VV) $(VFLAGS) -c -
 	#$(VV) $(VFLAGS) -c ./config/default.ini
@@ -30,6 +30,13 @@ debug: $(OBJS)
 	#$(VV) $(VFLAGS) -c inexistent_file
 	#$(VV) $(VFLAGS) -c empty_file
 	#$(VV) $(VFLAGS) -c cfg_test
+	#$(VV) $(VFLAGS) -p empty_dir
+
+	#TODO:
+	#$(VV) $(VFLAGS) -p testdir -l test #run when there are replacements to be made and when not, too
+	#$(VV) $(VFLAGS) -p testdir/test_file -l test # invalid read of size 1
+	# test with full word to replace not just one letter replacee and
+	# replacements
 
 %.o: src/%.c
 	$(CC) -c $*.c $(CFLAGS)

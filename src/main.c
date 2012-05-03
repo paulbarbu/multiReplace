@@ -208,11 +208,10 @@ int main(int argc, char *argv[]){
     DIR *path_dir;
     path_dir = opendir(path);
 
-    if(NULL != path_dir){
+    if(NULL != path_dir){ // TODO test this branch
         file_stats = (long int*) parse_dir(sets, path_dir, path);
-        closedir(path_dir);
     }
-    else{
+    else{ // TODO test this branch
         file_stats = malloc(2 * sizeof(long int));
         file_stats[0] = 0;
         file_stats[1] = 0;
@@ -259,7 +258,6 @@ int main(int argc, char *argv[]){
     printf("Total replacements: %ld\n", file_stats[1]);
 
     free(file_stats);
-    free(path_dir);
     free(path);
     free(config);
     free(lang);

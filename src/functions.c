@@ -181,54 +181,53 @@ long int replace_in_file(char **sets, FILE *file, char *path, const char *mode){
     if(-1 != size){
 
         buffer = malloc(size * sizeof(char));
-        found = malloc(size * sizeof(char));
 
         rewind(file);
         fread(buffer, 1, size, file);
 
         int i=0;
         do{ //search through all char sets
-                do{ //search for a character until found becomes NULL
-                    found = strstr(buffer, sets[i]);
-                    if(NULL != found && '\0' != sets[i][0]){
+            do{ //search for a character until found becomes NULL
+                found = strstr(buffer, sets[i]);
+                if(NULL != found && '\0' != sets[i][0]){
 
-                        //replace
-                        if(strlen(sets[i]) == strlen(sets[i+1])){
-                            strncpy(found, sets[i+1], strlen(sets[i+1]));
-                        }
-                        else{ //we have to modify the buffer's size
-                           len = found - buffer,
-                           remaining_len = len + strlen(sets[i]);
-
-                            before = malloc(len * sizeof(char));
-                            after = malloc(size - len - strlen(sets[i]));
-
-                            strncpy(before, buffer, len); //part before occurrence
-                            strcpy(after, buffer + remaining_len); //part after occurrence
-
-                            size += (strlen(sets[i+1]) - strlen(sets[i]));
-
-                            buffer = realloc(buffer, size * sizeof(char));
-                            buffer[0] = '\0';
-
-                            strcat(buffer, before);
-                            buffer[len] = '\0';
-
-                            strcat(buffer, sets[i+1]);
-                            buffer[len+strlen(sets[i+1])] = '\0';
-
-                            strcat(buffer, after);
-                            buffer[size] = '\0';
-
-                            free(before);
-                            free(after);
-                        }
-
-                        n++;
+                    //replace
+                    if(strlen(sets[i]) == strlen(sets[i+1])){
+                        strncpy(found, sets[i+1], strlen(sets[i+1]));
                     }
-                }while(NULL != found && '\0' != sets[i][0]);
+                    else{ //TODO test this branch//we have to modify the buffer's size
+                       len = found - buffer,
+                       remaining_len = len + strlen(sets[i]);
 
-                i+=2; //next char set
+                        before = malloc(len * sizeof(char));
+                        after = malloc(size - len - strlen(sets[i]));
+
+                        strncpy(before, buffer, len); //part before occurrence
+                        strcpy(after, buffer + remaining_len); //part after occurrence
+
+                        size += (strlen(sets[i+1]) - strlen(sets[i]));
+
+                        buffer = realloc(buffer, size * sizeof(char));
+                        buffer[0] = '\0';
+
+                        strcat(buffer, before);
+                        buffer[len] = '\0';
+
+                        strcat(buffer, sets[i+1]);
+                        buffer[len+strlen(sets[i+1])] = '\0';
+
+                        strcat(buffer, after);
+                        buffer[size] = '\0';
+
+                        free(before);
+                        free(after);
+                    }
+
+                    n++;
+                }
+            }while(NULL != found && '\0' != sets[i][0]);
+
+            i+=2; //next char set
         }while(NULL != sets[i] && '\0' != sets[i][0]);
 
         freopen(path, "w", file);
@@ -244,7 +243,7 @@ long int replace_in_file(char **sets, FILE *file, char *path, const char *mode){
  * long int** parse_dir(char** sets, DIR *dir, char *path)
  *
  * Tries to open every file in the *dir directory and its subdirectories to edit
- * it
+ * them
  *
  * Returns a bidimensional array of long ints, first is the number of files
  * edited and the second one is the number of replacements made
@@ -252,8 +251,8 @@ long int replace_in_file(char **sets, FILE *file, char *path, const char *mode){
 long int* parse_dir(char** sets, DIR *dir, char *path){
     long int *info = malloc(2 * sizeof(long int));
 
-    char *name = malloc(strlen(path) * sizeof(char) +1),
-         *def_name = malloc(strlen(path) * sizeof(char) +1);
+    char *name = malloc((strlen(path)+1) * sizeof(char)),
+         *def_name = malloc((strlen(path)+2) * sizeof(char));
 
     struct dirent *entry;
 
@@ -269,12 +268,12 @@ long int* parse_dir(char** sets, DIR *dir, char *path){
         if(0 != strcmp(entry->d_name, ".") && 0 != strcmp(entry->d_name, "..")){
 
             name = realloc(name,
-                    strlen(def_name) * sizeof(char) + strlen(entry->d_name));
+                strlen(def_name) * sizeof(char) + strlen(entry->d_name) + 1);
             strcpy(name, def_name);
 
             strcat(name, entry->d_name);
 
-            if(opendir(name)){
+            if(opendir(name)){ //TODO test this branch
                 DIR *sub_dir;
                 long int *info_sub = malloc(2 * sizeof(long int));
 
@@ -284,6 +283,8 @@ long int* parse_dir(char** sets, DIR *dir, char *path){
 
                 info[0] += info_sub[0];
                 info[1] += info_sub[1];
+
+                free(info_sub);
             }
             else{
                 FILE *file;
@@ -298,6 +299,9 @@ long int* parse_dir(char** sets, DIR *dir, char *path){
             }
         }
     }
+
+    free(name);
+    free(def_name);
 
     closedir(dir);
     return info;
