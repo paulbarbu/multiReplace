@@ -180,7 +180,9 @@ long int replace_in_file(char **sets, FILE *file, char *path, const char *mode){
     size = file_size(file);
     if(-1 != size){
 
-        buffer = malloc(size * sizeof(char));
+        buffer = malloc((size+1) * sizeof(char));
+
+        memset(buffer, '\0', size+1);
 
         rewind(file);
         fread(buffer, 1, size, file);

@@ -33,10 +33,11 @@ debug: $(OBJS)
 	#$(VV) $(VFLAGS) -p empty_dir
 
 	#TODO:
-	#$(VV) $(VFLAGS) -p testdir -l test #run when there are replacements to be made and when not, too
+	$(VV) $(VFLAGS) -p testdir -l test #run when there are replacements to be made
 	#$(VV) $(VFLAGS) -p testdir/test_file -l test # invalid read of size 1
 	# test with full word to replace not just one letter replacee and
 	# replacements
+	# test with xx = a
 
 %.o: src/%.c
 	$(CC) -c $*.c $(CFLAGS)

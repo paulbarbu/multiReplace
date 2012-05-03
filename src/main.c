@@ -173,6 +173,7 @@ int main(int argc, char *argv[]){
 
             if(NULL == sets){
                 printf("Invalid configuration file: %s\n", config);
+                printf("Or inexistent replacements in the specified section!\n");
 
                 free(path);
                 free(config);
