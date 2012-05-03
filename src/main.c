@@ -148,28 +148,40 @@ int main(int argc, char *argv[]){
      */
     config_file = fopen(config, "r");
 
-    if(NULL != config_file && -1 != file_size(config_file)){
-        position = lang_search(lang, config_file);
+    if(NULL != config_file){
+        if(-1 != file_size(config_file)){
+            position = lang_search(lang, config_file);
 
-        if(-1 == position){
-            rewind(config_file);
+            if(-1 == position){
+                rewind(config_file);
 
-            char *comment = malloc(82 * sizeof(char));
-            fgets(comment, 82, config_file);
-            while(';' == comment[0] || '\n' == comment[0]
-                    || '\0' == comment[0]){
+                char *comment = malloc(82 * sizeof(char));
                 fgets(comment, 82, config_file);
+                while(';' == comment[0] || '\n' == comment[0]
+                        || '\0' == comment[0]){
+                    fgets(comment, 82, config_file);
+                }
+                fseek(config_file, -1 * strlen(comment), SEEK_SET);
+
+                free(comment);
             }
-            fseek(config_file, -1 * strlen(comment), SEEK_SET);
 
-            free(comment);
+            sets = get_char_sets(config_file);
+
+            fclose(config_file);
+
+            if(NULL == sets){
+                printf("Invalid configuration file: %s\n", config);
+
+                free(path);
+                free(config);
+                free(lang);
+
+                exit(ERR_CFG_FILE);
+            }
         }
-
-        sets = get_char_sets(config_file);
-
-        fclose(config_file);
-
-        if(NULL == sets){
+        else{
+            fclose(config_file);
             printf("Invalid configuration file: %s\n", config);
 
             free(path);

@@ -24,7 +24,11 @@ debug: $(OBJS)
 	#$(VV) $(VFLAGS) -c config/default.ini
 	#$(VV) $(VFLAGS) -c test
 	#$(VV) $(VFLAGS) -c ./test
-	#test the -l part
+	#$(VV) $(VFLAGS) -l
+	#$(VV) $(VFLAGS) -l -
+	#$(VV) $(VFLAGS) -l asd
+	#$(VV) $(VFLAGS) -c inexistent_file
+	$(VV) $(VFLAGS) -c empty_file
 
 %.o: src/%.c
 	$(CC) -c $*.c $(CFLAGS)
