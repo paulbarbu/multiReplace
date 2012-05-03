@@ -185,7 +185,7 @@ long int replace_in_file(char **sets, FILE *file, char *path, const char *mode){
         memset(buffer, '\0', size+1);
 
         rewind(file);
-        fread(buffer, 1, size, file);
+        fread(buffer, sizeof(char), size, file);
 
         int i=0;
         do{ //search through all char sets
