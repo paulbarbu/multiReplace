@@ -28,7 +28,8 @@ debug: $(OBJS)
 	#$(VV) $(VFLAGS) -l -
 	#$(VV) $(VFLAGS) -l asd
 	#$(VV) $(VFLAGS) -c inexistent_file
-	$(VV) $(VFLAGS) -c empty_file
+	#$(VV) $(VFLAGS) -c empty_file
+	#$(VV) $(VFLAGS) -c cfg_test
 
 %.o: src/%.c
 	$(CC) -c $*.c $(CFLAGS)

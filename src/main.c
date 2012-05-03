@@ -156,10 +156,11 @@ int main(int argc, char *argv[]){
                 rewind(config_file);
 
                 char *comment = malloc(82 * sizeof(char));
-                fgets(comment, 82, config_file);
-                while(';' == comment[0] || '\n' == comment[0]
-                        || '\0' == comment[0]){
-                    fgets(comment, 82, config_file);
+                char *status;
+                status = fgets(comment, 82, config_file);
+                while((';' == comment[0] || '\n' == comment[0]
+                        || '\0' == comment[0]) && status != NULL){
+                    status = fgets(comment, 82, config_file);
                 }
                 fseek(config_file, -1 * strlen(comment), SEEK_SET);
 
