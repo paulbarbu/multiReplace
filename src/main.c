@@ -213,10 +213,10 @@ int main(int argc, char *argv[]){
     file_stats[0] = 0;
     file_stats[1] = 0;
 
-    if(NULL != path_dir){ // TODO test this branch
+    if(NULL != path_dir){
         parse_dir(sets, path_dir, path, file_stats);
     }
-    else{ // TODO test this branch
+    else{
         path_file = fopen(path, "r+");
 
         if(NULL != path_file){

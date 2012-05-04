@@ -12,6 +12,9 @@ multiReplacer: $(OBJS)
 
 debug: $(OBJS)
 	$(CC) $(DBGFLAGS) $(OBJS:.o=.c) $(CFLAGS)
+	#run with/without replacements to be made
+	#run with words/letters for replacements/replacees
+
 	#$(VV) $(VFLAGS)
 	#$(VV) $(VFLAGS) -p
 	#$(VV) $(VFLAGS) -p -
@@ -31,13 +34,13 @@ debug: $(OBJS)
 	#$(VV) $(VFLAGS) -c empty_file
 	#$(VV) $(VFLAGS) -c cfg_test
 	#$(VV) $(VFLAGS) -p empty_dir
+	#$(VV) $(VFLAGS) -p testdir -l test
+	#$(VV) $(VFLAGS) -p testdir/testdir2/test_file -l test
 
 	#TODO:
-	$(VV) $(VFLAGS) -p testdir -l test #run when there are replacements to be made
-	#$(VV) $(VFLAGS) -p testdir/test_file -l test # invalid read of size 1
-	# test with full word to replace not just one letter replacee and
-	# replacements
-	# test with xx = a
+	# test with xx=xxa <-- this needs checking before replacing, invalid
+	# replacee/replacement because there are matches for the lvalue in the rval
+	# test total files processed with a dir and one file -> output is 2 (wrong)
 
 %.o: src/%.c
 	$(CC) -c $*.c $(CFLAGS)
