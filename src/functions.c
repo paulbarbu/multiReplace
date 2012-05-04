@@ -248,24 +248,21 @@ long int replace_in_file(char **sets, FILE *file, char *path, const char *mode){
 }
 
 /**
- * long int** parse_dir(char** sets, DIR *dir, char *path)
+ * void parse_dir(char** sets, DIR *dir, char *path, long int* stats)
  *
  * Tries to open every file in the *dir directory and its subdirectories to edit
- * them
+ * them, the *dir must be already opened by opendir() as: dir = opendir(); and
+ * it will be closed by the function, this is needed by the recursion
  *
- * Returns a bidimensional array of long ints, first is the number of files
+ * Modifies the stats array of long ints, first is the number of files
  * edited and the second one is the number of replacements made
  */
-long int* parse_dir(char** sets, DIR *dir, char *path){
-    long int *info = malloc(2 * sizeof(long int));
-
+void parse_dir(char** sets, DIR *dir, char *path, long int* stats){
     char *name = malloc((strlen(path)+1) * sizeof(char)),
          *def_name = malloc((strlen(path)+2) * sizeof(char));
 
     struct dirent *entry;
-
-    info[0] = 0;
-    info[1] = 0;
+    DIR *sub_dir;
 
     strcpy(def_name, path);
     if('/' != def_name[strlen(def_name) - 1]){
@@ -281,18 +278,8 @@ long int* parse_dir(char** sets, DIR *dir, char *path){
 
             strcat(name, entry->d_name);
 
-            if(opendir(name)){ //TODO test this branch
-                DIR *sub_dir;
-                long int *info_sub = malloc(2 * sizeof(long int));
-
-                sub_dir = opendir(name);
-
-                info_sub = parse_dir(sets, sub_dir, name);
-
-                info[0] += info_sub[0];
-                info[1] += info_sub[1];
-
-                free(info_sub);
+            if(NULL != (sub_dir = opendir(name))){
+                parse_dir(sets, sub_dir, name, stats);
             }
             else{
                 FILE *file;
@@ -300,8 +287,8 @@ long int* parse_dir(char** sets, DIR *dir, char *path){
                 file = fopen(name, "r+");
                 if(NULL != file){
 
-                    info[1] += replace_in_file(sets, file, name, "w");
-                    info[0]++;
+                    stats[0]++;
+                    stats[1] += replace_in_file(sets, file, name, "w");
                     fclose(file);
                 }
             }
@@ -312,5 +299,4 @@ long int* parse_dir(char** sets, DIR *dir, char *path){
     free(def_name);
 
     closedir(dir);
-    return info;
 }

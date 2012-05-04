@@ -12,5 +12,5 @@ long int lang_search(char *needle, FILE *haystack);
 char** get_char_sets(FILE *source);
 long int replace_in_file(char **sets, FILE *file, char *path, const char *mode);
 long int file_size(FILE *file);
-long int* parse_dir(char **sets, DIR *dir, char *path);
+void parse_dir(char **sets, DIR *dir, char *path, long int* stats);
 #endif
