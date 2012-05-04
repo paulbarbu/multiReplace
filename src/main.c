@@ -171,13 +171,25 @@ int main(int argc, char *argv[]){
 
             fclose(config_file);
 
-            if(NULL == sets){
-                printf("Invalid configuration file: %s\n", config);
-                printf("Or inexistent replacements in the specified section!\n");
+            int sets_state = check_sets(sets);
+
+            if(NULL_SETS == sets_state || INVALID_SETS == sets_state){
+                printf("Invalid configuration file: %s\nCheck for inexistent "
+                "replacee/replacements pairs in the specified section!\n"
+                "Check if the replacee appears in the replacement!\n", config);
 
                 free(path);
                 free(config);
                 free(lang);
+
+                if(INVALID_SETS == sets_state){
+                    int i = 0;
+                    while(sets[i]){
+                        free(sets[i]);
+                        i++;
+                    }
+                    free(sets);
+                }
 
                 exit(ERR_CFG_FILE);
             }

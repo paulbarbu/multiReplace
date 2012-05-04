@@ -20,7 +20,6 @@ debug: $(OBJS)
 	#$(VV) $(VFLAGS) -p -
 	#$(VV) $(VFLAGS) -p-
 	#$(VV) $(VFLAGS) -p test
-	#$(VV) $(VFLAGS) -p ./test #check that overlapping TODO
 	#$(VV) $(VFLAGS) -c
 	#$(VV) $(VFLAGS) -c -
 	#$(VV) $(VFLAGS) -c ./config/default.ini
@@ -38,9 +37,7 @@ debug: $(OBJS)
 	#$(VV) $(VFLAGS) -p testdir/testdir2/test_file -l test
 
 	#TODO:
-	# test with xx=xxa <-- this needs checking before replacing, invalid
-	# replacee/replacement because there are matches for the lvalue in the rval
-	# test total files processed with a dir and one file -> output is 2 (wrong)
+	#$(VV) $(VFLAGS) -p ./test #check that overlapping
 
 %.o: src/%.c
 	$(CC) -c $*.c $(CFLAGS)

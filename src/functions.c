@@ -11,6 +11,8 @@
 
 #include "./includes/functions.h"
 
+const int NULL_SETS = -1, INVALID_SETS = -2, VALID_SETS = 1;
+
 /**
  * long int empty_file(FILE *file)
  *
@@ -299,4 +301,32 @@ void parse_dir(char** sets, DIR *dir, char *path, long int* stats){
     free(def_name);
 
     closedir(dir);
+}
+
+/**
+ * int check_sets(char **sets)
+ *
+ * Checks if a the given character sets of replacee and replacement are valid.
+ *
+ * If sets is NULL  return NULL_SETS
+ * If parts of the replacee are found in the replacement the
+ * sets are invalid and INVALID_SETS is returned.
+ * If the sets are valid OK is returned.
+ */
+int check_sets(char**sets){
+    if(NULL == sets){
+        return NULL_SETS;
+    }
+
+    int i=0;
+
+    while(NULL != sets[i]){
+        if(NULL != strstr(sets[i+1],sets[i])){
+            return INVALID_SETS;
+        }
+
+        i+=2;
+    }
+
+    return VALID_SETS;
 }
