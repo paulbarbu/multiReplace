@@ -170,7 +170,7 @@ char** get_char_sets(FILE *source){
  * Returns a long int representing number of replacements made
  */
 long int replace_in_file(char **sets, FILE *file, char *path, const char *mode){
-    long int n = 0, size = 0, len, remaining_len;
+    long int n = 0, size = 0, len, remaining_len, after_len;
 
     char *buffer,
          *found,
@@ -197,29 +197,35 @@ long int replace_in_file(char **sets, FILE *file, char *path, const char *mode){
                     if(strlen(sets[i]) == strlen(sets[i+1])){
                         strncpy(found, sets[i+1], strlen(sets[i+1]));
                     }
-                    else{ //TODO test this branch//we have to modify the buffer's size
-                       len = found - buffer,
-                       remaining_len = len + strlen(sets[i]);
+                    else{
+                        len = found - buffer,
+                        remaining_len = len + strlen(sets[i]);
+                        after_len = size - len - strlen(sets[i]);
 
-                        before = malloc(len * sizeof(char));
-                        after = malloc(size - len - strlen(sets[i]));
+                        before = malloc((len+1) * sizeof(char));
+                        after = malloc((after_len +1) * sizeof(char));
+
+                        memset(before, '\0', len+1);
+                        memset(after, '\0', after_len+1);
 
                         strncpy(before, buffer, len); //part before occurrence
                         strcpy(after, buffer + remaining_len); //part after occurrence
 
                         size += (strlen(sets[i+1]) - strlen(sets[i]));
 
-                        buffer = realloc(buffer, size * sizeof(char));
-                        buffer[0] = '\0';
+                        buffer = realloc(buffer, (size+1) * sizeof(char));
+
+                        memset(buffer, '\0', size+1);
+                        /*buffer[0] = '\0';*/
 
                         strcat(buffer, before);
-                        buffer[len] = '\0';
+                        /*buffer[len] = '\0';*/
 
                         strcat(buffer, sets[i+1]);
-                        buffer[len+strlen(sets[i+1])] = '\0';
+                        /*buffer[len+strlen(sets[i+1])] = '\0';*/
 
                         strcat(buffer, after);
-                        buffer[size] = '\0';
+                        /*buffer[size] = '\0';*/
 
                         free(before);
                         free(after);
