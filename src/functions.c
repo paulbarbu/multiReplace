@@ -1,7 +1,7 @@
 /**
  * Function implementations for mR
  *
- * (C) Copyright 2011 PauLLiK
+ * (C) Copyright 2011, 2012 Barbu Paul - Gheorghe
  */
 #include <stdlib.h>
 #include <stdio.h>

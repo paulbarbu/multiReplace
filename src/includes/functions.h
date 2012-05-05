@@ -1,7 +1,7 @@
 /**
  * Function headers for mR
  *
- * (C) Copyright 2011 PauLLiK
+ * (C) Copyright 2011, 2012 Barbu Paul - Gheorghe
  */
 
 #pragma once

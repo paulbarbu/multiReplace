@@ -1,7 +1,7 @@
 /**
  * Main file for mR
  *
- * (C) Copyright 2011 PauLLiK
+ * (C) Copyright 2011, 2012 Barbu Paul - Gheorghe
  */
 
 #include <stdio.h>
