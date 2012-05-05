@@ -8,6 +8,7 @@
 #include <ctype.h>
 #include <string.h>
 #include <dirent.h>
+#include <magic.h>
 
 #include "./includes/functions.h"
 
@@ -329,4 +330,45 @@ int check_sets(char**sets){
     }
 
     return VALID_SETS;
+}
+
+/**
+ * char *get_file_encoding(const char *filename)
+ *
+ * Get the encoding of a file by using libmagic
+ *
+ * Return a string containing the file's encoding or NULL on failure
+ *
+ * Note: assuming the magic database file is located at: /usr/share/misc/magic
+ * due to a bug in libmagic
+ */
+char *get_file_encoding(const char *filename){
+    const char *encoding;
+    char *e;
+    magic_t cookie;
+
+    cookie = magic_open(MAGIC_MIME_ENCODING);
+
+    if(NULL == cookie){
+        magic_close(cookie);
+        return NULL;
+    }
+
+    int load_status;
+    load_status = magic_load(cookie, "/usr/share/misc/magic");
+
+    if(-1 == load_status){
+        magic_close(cookie);
+        return NULL;
+    }
+
+    encoding = magic_file(cookie, filename);
+
+    e = malloc((strlen(encoding)+1) * sizeof(char));
+
+    strcpy(e, encoding);
+
+    magic_close(cookie);
+
+    return e;
 }

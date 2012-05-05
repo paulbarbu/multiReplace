@@ -23,6 +23,8 @@ int main(int argc, char *argv[]){
          *lang = malloc((strlen(DEF_LANG)+1) * sizeof(char)),
          **sets = NULL;
 
+    char *config_encoding;
+
     FILE *config_file = NULL,
         *path_file;
 
@@ -215,6 +217,18 @@ int main(int argc, char *argv[]){
         exit(ERR_CFG_FILE);
     }
 
+    config_encoding = get_file_encoding(config);
+
+    if(NULL == config_encoding){
+        printf("Couldn't determine the encoding of the config file!");
+
+        free(path);
+        free(config);
+        free(lang);
+        free(config_encoding);
+        exit(ERR_CFG_FILE);
+    }
+
     /**
      * Check if the path is a directory, a file or none
      */
@@ -244,6 +258,7 @@ int main(int argc, char *argv[]){
             free(path_dir);
             free(path);
             free(config);
+            free(config_encoding);
             free(lang);
 
             int i = 0;
@@ -273,6 +288,7 @@ int main(int argc, char *argv[]){
     free(file_stats);
     free(path);
     free(config);
+    free(config_encoding);
     free(lang);
 
     int i = 0;

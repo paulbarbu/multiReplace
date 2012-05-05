@@ -1,6 +1,6 @@
 CC=gcc
 VV=valgrind
-CFLAGS=-o mr -std=c99 -pedantic -Wall -Wshadow -Wpointer-arith -Wcast-qual -Wstrict-prototypes -Wmissing-prototypes
+CFLAGS=-lmagic -o mr -std=c99 -pedantic -Wall -Wshadow -Wpointer-arith -Wcast-qual -Wstrict-prototypes -Wmissing-prototypes
 VFLAGS=--track-fds=yes --log-file=vgrind.dbg --tool=memcheck --leak-check=yes --show-reachable=yes ./mr
 DBGFLAGS=-g
 OBJS=main.o functions.o
